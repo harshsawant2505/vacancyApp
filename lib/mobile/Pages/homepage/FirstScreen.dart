@@ -1,5 +1,6 @@
 import 'package:bits_hackathon/global%20widgets/parkingcard.dart';
 import 'package:bits_hackathon/global%20widgets/searchbar.dart';
+import 'package:bits_hackathon/mobile/Pages/map%20page/mappage.dart';
 import 'package:flutter/material.dart';
 
 class FirstScreen extends StatefulWidget {
@@ -11,6 +12,7 @@ class FirstScreen extends StatefulWidget {
 
 class _FirstScreenState extends State<FirstScreen> {
   final TextEditingController controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -19,9 +21,10 @@ class _FirstScreenState extends State<FirstScreen> {
         //put map inside
         Container(
           height: MediaQuery.of(context).size.height / 2 + 10,
+          width: MediaQuery.of(context).size.width-10,
           color: Colors.grey,
           child: const Center(
-            child: Text("Map"),
+            child: MapPage(),
           ),
         ),
         MainSearchBar(controller: controller),
@@ -29,6 +32,7 @@ class _FirstScreenState extends State<FirstScreen> {
           alignment: Alignment.bottomCenter,
           child: Container(
             height: MediaQuery.of(context).size.height / 2 + 10,
+            width: MediaQuery.of(context).size.width - 10,
             decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: const BorderRadius.only(

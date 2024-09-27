@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -9,19 +9,53 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  final List<LatLng> locations = [
-    const LatLng(37.7749, -122.4194), // San Francisco
-    const LatLng(34.0522, -118.2437), // Los Angeles
-    const LatLng(40.7128, -74.0060), // New York
-    // Add more locations as needed
-  ];
+  // or set manually init position
+  final mapController = MapController.withPosition(
+    initPosition: GeoPoint(
+      latitude: 15.5010,
+      longitude: 73.8294,
+    ),
+  );
+
+  @override
+  void dispose() {
+    super.dispose();
+    mapController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        
-      ],
-    );
+    return OSMFlutter(
+        controller: mapController,
+        osmOption: OSMOption(
+          userTrackingOption: const UserTrackingOption(
+            enableTracking: true,
+            unFollowUser: false,
+          ),
+          zoomOption: const ZoomOption(
+            initZoom: 8,
+            minZoomLevel: 3,
+            maxZoomLevel: 19,
+            stepZoom: 1.0,
+          ),
+          userLocationMarker: UserLocationMaker(
+            personMarker: const MarkerIcon(
+              icon: Icon(
+                Icons.location_history_rounded,
+                color: Colors.red,
+                size: 48,
+              ),
+            ),
+            directionArrowMarker: const MarkerIcon(
+              icon: Icon(
+                Icons.double_arrow,
+                size: 48,
+              ),
+            ),
+          ),
+          roadConfiguration: const RoadOption(
+            roadColor: Colors.yellowAccent,
+          ),
+        ));
   }
 }
