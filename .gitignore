@@ -1,0 +1,21 @@
+# Byte-compiled files
+*.pyc
+*.pyo
+__pycache__/
+
+# Virtual environment
+venv/
+env/
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# Environment variables
+.env
+
+# Ignore all files in a folder
+/temp/
+
+# Ignore node_modules if using Node.js for some reason
+node_modules/
