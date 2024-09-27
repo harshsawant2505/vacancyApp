@@ -10,6 +10,11 @@ class FirstScreen extends StatefulWidget {
 class _FirstScreenState extends State<FirstScreen> {
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(child: Scaffold());
+    return SafeArea(
+        child: Scaffold(
+      body: Stack(
+        children: [Text("lol")],
+      ),
+    ));
   }
 }
