@@ -29,17 +29,16 @@ class _FirstScreenState extends State<FirstScreen> {
           alignment: Alignment.bottomCenter,
           child: Container(
             height: MediaQuery.of(context).size.height / 2 + 10,
+            padding: const EdgeInsets.only(top: 17),
             decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20))),
             child: ListView.builder(
-                itemCount: 5 + 1, //+1 for index
+                physics: const BouncingScrollPhysics(),
+                itemCount: 5,
                 itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return const SizedBox(height: 10);
-                  }
                   return ParkingCard(
                       title:
                           "$index park with a fucking long name that should break it",
