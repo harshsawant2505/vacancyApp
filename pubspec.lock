@@ -75,6 +75,30 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.19.0"
+  latlng:
+    dependency: transitive
+    description:
+      name: latlng
+      sha256: a324c80073ef959d67ead88b57a717b7b87f182da1b980ccae92b3555ac82712
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.7"
+  latlong2:
+    dependency: "direct main"
+    description:
+      name: latlong2
+      sha256: "98227922caf49e6056f91b6c56945ea1c7b166f28ffcd5fb8e72fc0b453cc8fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.1"
   leak_tracker:
     dependency: transitive
     description:
@@ -107,6 +131,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  map:
+    dependency: "direct main"
+    description:
+      name: map
+      sha256: "1343b0168f62098525703cbd9ef8351acd2c87c7fa2b34f22d3d1b839e24769d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   matcher:
     dependency: transitive
     description:
