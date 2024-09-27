@@ -54,7 +54,7 @@ class _MainSearchBarState extends State<MainSearchBar> {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return LoginPage();
+                          return const LoginPage();
                         }));
                       },
                       child: const CircleAvatar(
@@ -125,6 +125,5 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
       ),
     );
-    ;
   }
 }
