@@ -53,6 +53,12 @@ class _MapPageState extends State<MapPage> {
               onMapIsReady: (isReady) async {
                 if (isReady) {
                   logger.d("MAP READY");
+                  Fluttertoast.showToast(
+                      msg: "Location might not be 100% accurate.",
+                      timeInSecForIosWeb: 10,
+                      backgroundColor: Colors.red,
+                      webBgColor: "red",
+                      textColor: Colors.black87);
                   await _enableUserTracking(); // Enable user tracking
                 } else {
                   logger.d("MAP not ready");
@@ -69,7 +75,7 @@ class _MapPageState extends State<MapPage> {
                   personMarker: const MarkerIcon(
                     icon: Icon(
                       Icons.location_history_rounded,
-                      color: Colors.red,
+                      color: Colors.green,
                       size: 48,
                     ),
                   ),

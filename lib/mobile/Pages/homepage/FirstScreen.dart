@@ -17,7 +17,6 @@ class _FirstScreenState extends State<FirstScreen> {
   final TextEditingController controller = TextEditingController();
 
   Future<void> checkLocationPermission() async {
-    //function to check the user permission if it's granted or not.
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -58,7 +57,7 @@ class _FirstScreenState extends State<FirstScreen> {
                 itemBuilder: (context, index) {
                   return ParkingCard(
                       title:
-                          "$index park with a fucking long name that should break it",
+                          "$index park with a very very long name that should break it",
                       distance: "${index * 100}",
                       vacancy: 100);
                 },
