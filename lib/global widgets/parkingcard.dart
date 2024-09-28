@@ -1,4 +1,3 @@
-import 'package:bits_hackathon/globalvariables.dart';
 import 'package:flutter/material.dart';
 
 class ParkingCard extends StatefulWidget {
@@ -57,11 +56,59 @@ class _ParkingCardState extends State<ParkingCard> {
                           ),
                         ],
                       ),
-                      Text(
-                        "${widget.entry['4w']} spots remaining",
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.green),
+                      const Text(
+                        "Vacancies:",
+                        style: TextStyle(fontSize: 14),
                       ),
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              Icon(
+                                Icons.local_taxi_outlined,
+                                color:
+                                    (widget.entry['4w'].toString() == "null" ||
+                                            widget.entry['4w'] == 0)
+                                        ? Colors.red
+                                        : Colors.green,
+                              ),
+                              Text(
+                                "${widget.entry['4w'].toString() == "null" ? '0' : widget.entry['4w']}",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: (widget.entry['4w'].toString() ==
+                                                "null" ||
+                                            widget.entry['4w'] == 0)
+                                        ? Colors.red
+                                        : Colors.green),
+                              )
+                            ],
+                          ),
+                          const SizedBox(width: 15),
+                          Column(
+                            children: [
+                              Icon(
+                                Icons.pedal_bike_rounded,
+                                color:
+                                    (widget.entry['2w'].toString() == "null" ||
+                                            widget.entry['2w'] == 0)
+                                        ? Colors.red
+                                        : Colors.green,
+                              ),
+                              Text(
+                                "${widget.entry['2w'].toString() == "null" ? '0' : widget.entry['2w']}",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: (widget.entry['2w'].toString() ==
+                                                "null" ||
+                                            widget.entry['2w'] == 0)
+                                        ? Colors.red
+                                        : Colors.green),
+                              ),
+                            ],
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ),
