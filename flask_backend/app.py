@@ -2,6 +2,7 @@
 from config import app
 from flask import request, jsonify
 from models.getNearbyPark import get_city_data
+from models.getAll import get_all_city_data
 
 
 contact = {
@@ -37,6 +38,12 @@ def getParkingSpots():
     else:
         print("Request is not JSON")
         return jsonify({'error': 'Request must be JSON'}), 400
+    
+@app.route("/getAllParkingSpots", methods=["GET"])
+def getAllParkingSpots():
+    data = get_all_city_data()
+    print(len(data))
+    return jsonify(data)
 
 
 @app.route("/", methods=["POST"])
