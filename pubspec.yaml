@@ -19,6 +19,9 @@ dependencies:
   fluttertoast: ^8.2.8
   geolocator: ^13.0.1
   logger: ^2.4.0
+  flutter_email_sender: ^6.0.3
+  url_launcher: ^6.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

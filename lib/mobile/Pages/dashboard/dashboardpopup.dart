@@ -1,3 +1,4 @@
+import 'package:bits_hackathon/mobile/Pages/complaints%20pages/complaints.dart';
 import 'package:bits_hackathon/mobile/Pages/dashboard/adminDashboard.dart';
 import 'package:bits_hackathon/mobile/Pages/dashboard/userdashboard.dart';
 import 'package:flutter/material.dart';
@@ -45,8 +46,12 @@ class AccountPopUp extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const ComplaintsPage();
+                  }));
                 },
-                child: const MenuButton(icon: Icons.feedback, text: "Complain"),
+                child:
+                    const MenuButton(icon: Icons.feedback, text: "Complaint"),
               ),
               Visibility(
                 visible: true,
