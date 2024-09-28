@@ -3,6 +3,7 @@ from config import app
 from flask import request, jsonify
 from models.getNearbyPark import get_city_data
 
+
 contact = {
     "name": "Jane smith",
     "phone": "939359839539",
@@ -12,9 +13,9 @@ contact = {
 
 @app.route("/", methods=["GET"])
 def home():
-    data = get_city_data('vasco')
+    data = get_city_data('mapusa')
     print(data)
-    return jsonify({"data": data})
+    return jsonify("Hello, World!")
 
 
 @app.route("/contacts", methods=["GET"])
