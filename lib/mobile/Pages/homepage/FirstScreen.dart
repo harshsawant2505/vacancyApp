@@ -31,7 +31,7 @@ class _FirstScreenState extends State<FirstScreen> {
               ),
             ),
             Container(
-              height: MediaQuery.of(context).size.height / 2 - 20,
+              height: MediaQuery.of(context).size.height / 2 - 30,
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.only(top: 20),
               decoration: BoxDecoration(
