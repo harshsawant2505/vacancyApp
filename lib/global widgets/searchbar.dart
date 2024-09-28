@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class MainSearchBar extends StatefulWidget {
   final TextEditingController controller;
+
   const MainSearchBar({super.key, required this.controller});
 
   @override
@@ -58,7 +59,12 @@ class _MainSearchBarState extends State<MainSearchBar> {
                         //     MaterialPageRoute(builder: (context) {
                         //   return const LoginPage();
                         // }));
-                        showDialog(
+                        // showDialog(
+                        //     context: context,
+                        //     builder: (context) {
+                        //       return const AccountPopUp();
+                        //     });
+                        showBottomSheet(
                             context: context,
                             builder: (context) {
                               return const AccountPopUp();
@@ -86,6 +92,7 @@ class CustomTextField extends StatefulWidget {
   final String hint;
   final IconData icon;
   final bool ispassword;
+
   const CustomTextField(
       {super.key,
       required this.controller,
