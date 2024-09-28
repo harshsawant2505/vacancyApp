@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:bits_hackathon/mobile/Pages/dashboard/dashboardpopup.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class MainSearchBar extends StatefulWidget {
@@ -11,8 +14,29 @@ class MainSearchBar extends StatefulWidget {
 }
 
 class _MainSearchBarState extends State<MainSearchBar> {
+  List<Map> parkingSpots = [];
   void getData(String name) async {
-    print(name);
+    const url = "http://localhost:8000/getParkingSpots";
+    final Map<String, dynamic> jsonData = {
+      'city': name,
+    };
+
+    try {
+      // final res = await http.post(Uri.parse(url), body: {"city": name});
+      final res = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(jsonData), // Encode the Map to JSON
+      );
+
+      if (res.statusCode == 200) {
+        print(res.body);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override

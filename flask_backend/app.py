@@ -25,9 +25,12 @@ def contacts():
 @app.route("/getParkingSpots", methods=["POST"])
 def getParkingSpots():
     if request.is_json:
-        data = request.get_json()
-        city = data.get('city')
+        data1 = request.get_json()
+        print(data1)
+        city = data1.get('city')
         print(city)
+        data = get_city_data(city)
+        print(data)
         print("Data received:", data)
         response = {
             'received_data': data,
