@@ -1,6 +1,5 @@
 import 'package:bits_hackathon/mobile/Pages/dashboard/userdashboard.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class AccountPopUp extends StatelessWidget {
   const AccountPopUp({super.key});
@@ -33,8 +32,9 @@ class AccountPopUp extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-                  Fluttertoast.showToast(
-                      msg: "working", toastLength: Toast.LENGTH_SHORT);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const Dashboard();
+                  }));
                 },
                 child: const MenuButton(
                     icon: Icons.account_circle, text: "Your account"),
@@ -42,20 +42,16 @@ class AccountPopUp extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-                  Fluttertoast.showToast(
-                      msg: "working", toastLength: Toast.LENGTH_SHORT);
                 },
                 child: const MenuButton(icon: Icons.call, text: "Complain"),
               ),
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-                  Fluttertoast.showToast(
-                      msg: "working", toastLength: Toast.LENGTH_SHORT);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) {
-                        return const Dashboard();
-                      }));
+
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const Dashboard();
+                  }));
                 },
                 child: const MenuButton(
                     icon: Icons.account_circle, text: "Account"),
@@ -71,6 +67,7 @@ class AccountPopUp extends StatelessWidget {
 class MenuButton extends StatelessWidget {
   final IconData icon;
   final String text;
+
   const MenuButton({super.key, required this.icon, required this.text});
 
   @override

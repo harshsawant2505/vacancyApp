@@ -16,7 +16,7 @@ class Dashboard extends StatelessWidget {
           ListView(
             shrinkWrap: true,
             padding: const EdgeInsets.only(left: 15),
-            children: [
+            children: const [
               Text(
                 "Name",
                 style: TextStyle(fontSize: 25),
@@ -28,7 +28,7 @@ class Dashboard extends StatelessWidget {
               shrinkWrap: true,
               itemCount: 5,
               itemBuilder: (context, index) {
-                return MyVehicle();
+                return const MyVehicle();
               })
         ],
       ),
@@ -51,7 +51,7 @@ class MyVehicle extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Column(
+          child: const Column(
             children: [
               Text(
                 "Car model",
