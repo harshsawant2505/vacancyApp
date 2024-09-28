@@ -24,10 +24,10 @@ Future<double> getDistance(GeoPoint place) async {
       g,
       place,
       roadType: RoadType.car,
-      roadOption: RoadOption(
-        roadColor: Colors.white.withOpacity(0),
+      roadOption: const RoadOption(
+        roadColor: Colors.red,
       ),
-    );
+    );  
     logger.d('yoooo ${road.distance}');
     dis = road.distance ?? 0;
   } catch (e) {
