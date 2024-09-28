@@ -2,6 +2,7 @@
 
 import 'package:bits_hackathon/global%20widgets/parkingcard.dart';
 import 'package:bits_hackathon/global%20widgets/searchbar.dart';
+import 'package:bits_hackathon/globalvariables.dart';
 import 'package:bits_hackathon/mobile/Pages/map%20page/mappage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,6 +25,13 @@ class _FirstScreenState extends State<FirstScreen> {
     }
   }
 
+  void loadAgain() {
+    setState(() {
+      parkingSpots = parkingSpots;
+    });
+    print(parkingSpots);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -36,7 +44,10 @@ class _FirstScreenState extends State<FirstScreen> {
       child: Scaffold(
         body: Column(
           children: [
-            MainSearchBar(controller: controller),
+            MainSearchBar(
+              controller: controller,
+              func: loadAgain,
+            ),
             Container(
               height: MediaQuery.of(context).size.height / 2 - 50,
               width: MediaQuery.of(context).size.width,
@@ -54,13 +65,10 @@ class _FirstScreenState extends State<FirstScreen> {
               ),
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
-                itemCount: 5,
+                itemCount: parkingSpots.length,
                 itemBuilder: (context, index) {
                   return ParkingCard(
-                      title:
-                          "$index park with a fucking long name that should break it",
-                      distance: "${index * 100}",
-                      vacancy: 100);
+                      entry: parkingSpots[index],);
                 },
               ),
             )

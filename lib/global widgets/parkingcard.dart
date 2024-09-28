@@ -1,20 +1,15 @@
+import 'package:bits_hackathon/globalvariables.dart';
 import 'package:flutter/material.dart';
 
 class ParkingCard extends StatefulWidget {
-  final String title, distance;
-  final int vacancy;
-  const ParkingCard(
-      {super.key,
-      required this.title,
-      required this.distance,
-      required this.vacancy});
+  final Map entry;
+  const ParkingCard({super.key, required this.entry});
 
   @override
   State<ParkingCard> createState() => _ParkingCardState();
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  bool paid = true;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -38,27 +33,32 @@ class _ParkingCardState extends State<ParkingCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.title,
+                        widget.entry['place'],
                         style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 15, fontWeight: FontWeight.w600),
                       ),
                       Row(
                         children: [
                           Text(
-                            "${widget.distance}m",
+                            "100m",
                             style: const TextStyle(fontSize: 14),
                           ),
                           const Spacer(),
                           Text(
-                            paid ? "Paid" : "Free",
+                            widget.entry['type'],
                             style: TextStyle(
                                 fontSize: 14,
-                                color: paid ? Colors.red : Colors.green),
+                                color: widget.entry['type']
+                                            .toString()
+                                            .toLowerCase() ==
+                                        'paid'
+                                    ? Colors.red
+                                    : Colors.green),
                           ),
                         ],
                       ),
                       Text(
-                        "${widget.vacancy} spots remaining",
+                        "${widget.entry['4w']} spots remaining",
                         style:
                             const TextStyle(fontSize: 14, color: Colors.green),
                       ),

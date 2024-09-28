@@ -32,10 +32,7 @@ def getParkingSpots():
         data = get_city_data(city)
         print(data)
         print("Data received:", data)
-        response = {
-            'received_data': data,
-            'status': 'success'
-        }
+        response = data
         return jsonify(response)
     else:
         print("Request is not JSON")

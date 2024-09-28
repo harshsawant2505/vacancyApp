@@ -1,26 +1,27 @@
 import 'dart:convert';
 
+import 'package:bits_hackathon/globalvariables.dart';
 import 'package:bits_hackathon/mobile/Pages/dashboard/dashboardpopup.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class MainSearchBar extends StatefulWidget {
   final TextEditingController controller;
+  final VoidCallback func;
 
-  const MainSearchBar({super.key, required this.controller});
+  const MainSearchBar(
+      {super.key, required this.controller, required this.func});
 
   @override
   State<MainSearchBar> createState() => _MainSearchBarState();
 }
 
 class _MainSearchBarState extends State<MainSearchBar> {
-  List<Map> parkingSpots = [];
   void getData(String name) async {
     const url = "http://localhost:8000/getParkingSpots";
     final Map<String, dynamic> jsonData = {
       'city': name,
     };
-
     try {
       // final res = await http.post(Uri.parse(url), body: {"city": name});
       final res = await http.post(
@@ -32,7 +33,15 @@ class _MainSearchBarState extends State<MainSearchBar> {
       );
 
       if (res.statusCode == 200) {
-        print(res.body);
+        String newlist = json.decode(res.body);
+        List<dynamic> listOfMaps = json.decode(newlist);
+        List<Map<String, dynamic>> castedList =
+            List<Map<String, dynamic>>.from(listOfMaps);
+
+        parkingSpots.clear();
+        parkingSpots.addAll(castedList);
+        print(parkingSpots);
+        widget.func();
       }
     } catch (e) {
       print(e.toString());
