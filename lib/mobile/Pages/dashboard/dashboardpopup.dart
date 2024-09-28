@@ -7,7 +7,7 @@ class AccountPopUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.5,
+      heightFactor: 0.4,
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.white,

@@ -55,15 +55,6 @@ class _MainSearchBarState extends State<MainSearchBar> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        // Navigator.push(context,
-                        //     MaterialPageRoute(builder: (context) {
-                        //   return const LoginPage();
-                        // }));
-                        // showDialog(
-                        //     context: context,
-                        //     builder: (context) {
-                        //       return const AccountPopUp();
-                        //     });
                         showBottomSheet(
                             context: context,
                             builder: (context) {
