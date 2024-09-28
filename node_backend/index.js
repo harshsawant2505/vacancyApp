@@ -3,7 +3,7 @@ import express from 'express';
 import session from "express-session";
 import cors from "cors";
 var app = express();
-import {getAbout, getLocationDetails, getUserData, register, login, setDataSet, getParkingDetails, getParkingAllDetails} from './controllers/UserController.js';
+import {getAbout, getLocationDetails, getUserData, register, login, setDataSet, getParkingDetails, getParkingAllDetails,getCorrespondingData} from './controllers/UserController.js';
 
 
 app.use(cors());
@@ -18,6 +18,8 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false } // Set to true if using HTTPS
 }));
+
+app.post('getCorrespondingData', getCorrespondingData);
 
 app.get('/setdataset', setDataSet);
 
