@@ -1,5 +1,4 @@
 import 'package:bits_hackathon/mobile/Pages/dashboard/dashboardpopup.dart';
-import 'package:bits_hackathon/mobile/Pages/loginpage.dart';
 import 'package:flutter/material.dart';
 
 class MainSearchBar extends StatefulWidget {
@@ -21,7 +20,7 @@ class _MainSearchBarState extends State<MainSearchBar> {
         elevation: 5,
         borderRadius: BorderRadius.circular(200),
         child: SizedBox(
-          height: MediaQuery.of(context).size.width / 8,
+          height: 50,
           child: Stack(
             children: [
               TextField(

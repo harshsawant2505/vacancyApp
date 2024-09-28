@@ -23,9 +23,7 @@ class _FirstScreenState extends State<FirstScreen> {
           children: [
             MainSearchBar(controller: controller),
             Container(
-              height: MediaQuery.of(context).size.height / 2 -
-                  MediaQuery.of(context).size.width / 8 +
-                  MediaQuery.of(context).size.height / 70,
+              height: MediaQuery.of(context).size.height / 2 - 50,
               width: MediaQuery.of(context).size.width,
               color: Colors.grey,
               child: const Center(
@@ -33,9 +31,7 @@ class _FirstScreenState extends State<FirstScreen> {
               ),
             ),
             Container(
-              height: MediaQuery.of(context).size.height / 2 -
-                  MediaQuery.of(context).size.width / 8 +
-                  MediaQuery.of(context).size.height / 70,
+              height: MediaQuery.of(context).size.height / 2 - 20,
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.only(top: 20),
               decoration: BoxDecoration(
