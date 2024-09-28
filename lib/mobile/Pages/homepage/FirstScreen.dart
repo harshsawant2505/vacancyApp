@@ -134,8 +134,8 @@ class _FirstScreenState extends State<FirstScreen> {
   @override
   void initState() {
     super.initState();
-    getAllData();
     checkLocationPermission();
+    getAllData();
     _getCurrentLocationAndSortCoordinates();
   }
 
