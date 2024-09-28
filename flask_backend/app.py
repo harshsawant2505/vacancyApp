@@ -11,7 +11,7 @@ contact = {
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({"data": "Data from python flask server get route"})
+    return jsonify({"data": "Data from python  sdgdgerver get route"})
 
 
 @app.route("/contacts", methods=["GET"])
@@ -30,7 +30,7 @@ def set():
         print("Number:",data.get('number'),"Key:",data.get('key'),"Boolean:",data.get('boolean'))
         
         
-        # Process the data (for demonstration, just echoing it back)
+        # Process the data (for demonstration, just echoing it back
         response = {
             'received_data': data,
             'status': 'success'
