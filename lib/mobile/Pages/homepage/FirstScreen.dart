@@ -6,9 +6,10 @@ import 'package:bits_hackathon/global%20widgets/parkingcard.dart';
 import 'package:bits_hackathon/global%20widgets/searchbar.dart';
 import 'package:bits_hackathon/globalvariables.dart';
 import 'package:bits_hackathon/mobile/Pages/map%20page/mappage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as h;
 
 class FirstScreen extends StatefulWidget {
   const FirstScreen({super.key});
@@ -37,40 +38,29 @@ class _FirstScreenState extends State<FirstScreen> {
     print(parkingSpots);
   }
 
-  // void getAllData() async {
-  //   const url = "http://localhost:8000/getAllParkingSpots";
+  void getAllData() async {
+    const url = "http://localhost:3001/allparkingdetails";
 
-  //   try {
-  //     // final res = await http.post(Uri.parse(url), body: {"city": name});
-  //     final res = await http.post(
-  //       Uri.parse(url),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: json.encode(jsonData), // Encode the Map to JSON
-  //     );
+    try {
+      final res = await h.get(
+        Uri.parse(url),
+      );
+      print(res.body);
 
-  //     if (res.statusCode == 200) {
-  //       String newlist = json.decode(res.body);
-  //       List<dynamic> listOfMaps = json.decode(newlist);
-  //       List<Map<String, dynamic>> castedList =
-  //           List<Map<String, dynamic>>.from(listOfMaps);
-
-  //       parkingSpots.clear();
-  //       parkingSpots.addAll(castedList);
-  //       setState(() {
-  //         parkingSpots = parkingSpots;
-  //       });
-  //     }
-  //   } catch (e) {
-  //     print(e.toString());
-  //   }
-  // }
+      if (res.statusCode == 200) {
+        setState(() {
+          parkingSpots = parkingSpots;
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // getAllData();
+    getAllData();
     checkLocationPermission();
   }
 
@@ -89,7 +79,7 @@ class _FirstScreenState extends State<FirstScreen> {
               width: MediaQuery.of(context).size.width,
               color: Colors.grey,
               child: const Center(
-                child: MapPage(),
+                child: MapScreen(),
               ),
             ),
             Container(

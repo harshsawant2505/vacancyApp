@@ -23,6 +23,12 @@ def get_all_city_data():
     # Search for the city, ignoring case
     df['gps'] = df['gps'].str.strip()
     df['gps'] = df['gps'].str.replace(r'\s{2,}', ' ', regex=True)
+    df['type'] = df['type'].fillna("free").replace(r'^\s*$', 'free', regex=True)
+    df['2w'] = df['2w'].fillna(0).replace(r'^\s*$', 0, regex=True)
+    df['4w'] = df['4w'].fillna(0).replace(r'^\s*$', 0, regex=True)
+    df['city'] = df['city'].fillna("").replace(r'^\s*$', "", regex=True)
+    df['place'] = df['place'].fillna("").replace(r'^\s*$', "", regex=True)
+    df['gps'] = df['gps'].fillna("").replace(r'^\s*$', "", regex=True)
     fields = df.to_dict(orient='records')
     
 

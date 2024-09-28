@@ -1,9 +1,12 @@
 import "dotenv"
 import express from 'express';
 import session from "express-session";
+import cors from "cors";
 var app = express();
-import {getAbout, getLocationDetails, getUserData, register, login} from './controllers/UserController.js';
+import {getAbout, getLocationDetails, getUserData, register, login, setDataSet, getParkingDetails, getParkingAllDetails} from './controllers/UserController.js';
 
+
+app.use(cors());
 app.use(express.json());
 
 const sessionKey =  !process.env.SESSIONKEY;
@@ -16,7 +19,7 @@ app.use(session({
   cookie: { secure: false } // Set to true if using HTTPS
 }));
 
-
+app.get('/setdataset', setDataSet);
 
 app.get('/profile', getUserData);
 
@@ -27,6 +30,10 @@ app.post('/login', login)
 app.get('/about', getAbout);
 
 app.post('/getlocation', getLocationDetails);
+
+app.post('/parkingdetails', getParkingDetails);
+
+app.get('/allparkingdetails', getParkingAllDetails);
 
 const PORT = process.env.PORT || 3001;
 

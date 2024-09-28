@@ -18,7 +18,7 @@ class MainSearchBar extends StatefulWidget {
 
 class _MainSearchBarState extends State<MainSearchBar> {
   void getData(String name) async {
-    const url = "http://localhost:8000/getParkingSpots";
+    const url = "http://localhost:3001/parkingdetails";
     final Map<String, dynamic> jsonData = {
       'city': name,
     };
@@ -33,8 +33,8 @@ class _MainSearchBarState extends State<MainSearchBar> {
       );
 
       if (res.statusCode == 200) {
-        String newlist = json.decode(res.body);
-        List<dynamic> listOfMaps = json.decode(newlist);
+        
+        List<dynamic> listOfMaps = json.decode(res.body);
         List<Map<String, dynamic>> castedList =
             List<Map<String, dynamic>>.from(listOfMaps);
 
