@@ -12,7 +12,6 @@ class ParkingCard extends StatefulWidget {
 
 class _ParkingCardState extends State<ParkingCard> {
   double dis = 0;
-  final extraController = MapController();
   void getdis() async {
     GeoPoint place = GeoPoint(
         latitude:
@@ -22,7 +21,7 @@ class _ParkingCardState extends State<ParkingCard> {
             double.tryParse(widget.entry['gps'].toString().split(" ").last) ??
                 0);
 
-    dis = await getDistance(place, extraController);
+    dis = await getDistance(place);
     setState(() {
       dis = dis;
     });
@@ -31,7 +30,6 @@ class _ParkingCardState extends State<ParkingCard> {
   @override
   void initState() {
     getdis();
-    extraController.osmBaseController.clearAllRoads();
     super.initState();
   }
 

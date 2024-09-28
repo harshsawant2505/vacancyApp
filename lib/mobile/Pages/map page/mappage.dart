@@ -12,13 +12,6 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  final mapController = MapController.withPosition(
-    initPosition: GeoPoint(
-      latitude: 15.5010, // Placeholder coordinates
-      longitude: 73.8294, // Placeholder coordinates
-    ),
-  );
-
   Logger logger = Logger();
 
   @override
@@ -56,7 +49,14 @@ class _MapPageState extends State<MapPage> {
               onMapIsReady: (isReady) async {
                 if (isReady) {
                   logger.d("MAP READY");
-                  await _enableUserTracking(); // Enable user tracking
+                  await _enableUserTracking();
+                  Fluttertoast.showToast(
+                      msg: "Location not 100% accurate",
+                      timeInSecForIosWeb: 10,
+                      toastLength: Toast.LENGTH_LONG,
+                      backgroundColor: Colors.red,
+                      webBgColor: "red",
+                      textColor: Colors.black87); // Enable user tracking
                 } else {
                   logger.d("MAP not ready");
                 }
