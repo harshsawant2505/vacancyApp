@@ -2,6 +2,7 @@
 
 import 'package:bits_hackathon/global%20widgets/parkingcard.dart';
 import 'package:bits_hackathon/global%20widgets/searchbar.dart';
+import 'package:bits_hackathon/mobile/Pages/loginpage.dart';
 import 'package:bits_hackathon/mobile/Pages/map%20page/mappage.dart';
 import 'package:flutter/material.dart';
 
@@ -18,29 +19,30 @@ class _FirstScreenState extends State<FirstScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      body: Stack(alignment: Alignment.topLeft, children: [
-        Container(
-          height: MediaQuery.of(context).size.height / 2 + 10,
-          width: MediaQuery.of(context).size.width,
-          color: Colors.grey,
-          child: const Center(
-            child: MapPage(),
-          ),
-        ),
-        MainSearchBar(controller: controller),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            height: MediaQuery.of(context).size.height / 2 + 10,
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.only(top: 17),
-            decoration: BoxDecoration(
+      child: Scaffold(
+        body: Column(
+          children: [
+            MainSearchBar(controller: controller),
+            Container(
+              height: MediaQuery.of(context).size.height / 2 -
+                  MediaQuery.of(context).size.width / 8 +
+                  MediaQuery.of(context).size.height / 70,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.grey,
+              child: const Center(
+                child: MapPage(),
+              ),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height / 2 -
+                  MediaQuery.of(context).size.width / 8 +
+                  MediaQuery.of(context).size.height / 70,
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.only(top: 20),
+              decoration: BoxDecoration(
                 color: Colors.grey[200],
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25))),
-            child: ListView.builder(
+              ),
+              child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 itemCount: 5,
                 itemBuilder: (context, index) {
@@ -49,10 +51,12 @@ class _FirstScreenState extends State<FirstScreen> {
                           "$index park with a fucking long name that should break it",
                       distance: "${index * 100}",
                       vacancy: 100);
-                }),
-          ),
-        )
-      ]),
-    ));
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
