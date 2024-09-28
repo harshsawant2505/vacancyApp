@@ -1,6 +1,7 @@
 import 'package:bits_hackathon/globalvariables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ParkingCard extends StatefulWidget {
   final Map entry;
@@ -13,15 +14,14 @@ class ParkingCard extends StatefulWidget {
 class _ParkingCardState extends State<ParkingCard> {
   double dis = 0;
   void getdis() async {
-    GeoPoint place = GeoPoint(
-        latitude:
-            double.tryParse(widget.entry['gps'].toString().split(" ").first) ??
-                0,
-        longitude:
-            double.tryParse(widget.entry['gps'].toString().split(" ").last) ??
-                0);
-
-    dis = await getDistance(place);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    final lat =
+        double.tryParse(widget.entry['gps'].toString().split(' ').first) ?? 0;
+    final lon =
+        double.tryParse(widget.entry['gps'].toString().split(' ').last) ?? 0;
+    dis = DistanceCalculator()
+        .calculateDistance(position.latitude, position.longitude, lat, lon);
     setState(() {
       dis = dis;
     });

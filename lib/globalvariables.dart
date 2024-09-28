@@ -15,31 +15,8 @@ final mapController = MapController.withPosition(
   ),
 );
 
-Future<double> getDistance(GeoPoint place) async {
-  double dis = 0;
-  GeoPoint g = GeoPoint(latitude: 15, longitude: 73);
-
-  try {
-    logger.d("Entered");
-    RoadInfo road = await mapController.drawRoad(
-      g,
-      place,
-      roadType: RoadType.car,
-      roadOption: RoadOption(
-        roadColor: Colors.white.withOpacity(0),
-      ),
-    );
-    logger.d('yoooo ${road.distance}');
-    dis = road.distance ?? 0;
-  } catch (e) {
-    logger.d('error ${e.toString()}');
-  }
-
-  return dis;
-}
-
 class DistanceCalculator {
-  final Distance distance = Distance();
+  final Distance distance = const Distance();
 
   // Function to calculate and format the distance between two coordinates
   double calculateDistance(double lat1, double lon1, double lat2, double lon2) {

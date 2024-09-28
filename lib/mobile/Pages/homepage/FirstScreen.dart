@@ -104,6 +104,30 @@ class _FirstScreenState extends State<FirstScreen> {
         .toList();
     print("The man: ");
     print(sortedCoordinates);
+
+    for (int i = 0; i < 10 && i < sortedCoordinates.length; i++) {
+      final lat = sortedCoordinates[i][0];
+      final lon = sortedCoordinates[i][1];
+
+      try {
+        const url = "http://localhost:3001/getCorrespondingData";
+        final res = await h.post(
+          Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: json.encode({'lat': lat, 'lon': lon}), // Encode the Map to JSON
+        );
+
+        if (res.statusCode == 200) {
+          final Map something = json.decode(res.body);
+          parkingSpots.add(something);
+          print(parkingSpots);
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+    }
     setState(() {}); // Update the UI
   }
 
@@ -146,7 +170,8 @@ class _FirstScreenState extends State<FirstScreen> {
                     )
                   : ListView.builder(
                       physics: const BouncingScrollPhysics(),
-                      itemCount: parkingSpots.length,
+                      itemCount:
+                          controller.text.isEmpty ? 10 : parkingSpots.length,
                       itemBuilder: (context, index) {
                         return ParkingCard(
                           entry: parkingSpots[index],

@@ -19,7 +19,7 @@ app.use(session({
   cookie: { secure: false } // Set to true if using HTTPS
 }));
 
-app.post('getCorrespondingData', getCorrespondingData);
+app.post('/getCorrespondingData', getCorrespondingData);
 
 app.get('/setdataset', setDataSet);
 
