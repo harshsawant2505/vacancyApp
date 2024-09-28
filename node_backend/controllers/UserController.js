@@ -1,12 +1,20 @@
 
 import User from "../models/UserModel.js";
 import connectDB from "../config.js";
-
+import axios from "axios";
 import bcrypt from 'bcrypt';
 
 
 async function getUserData(req,res) {
     try {
+        await connectDB();
+
+        if(req.session.user) {
+            console.log('Session data:', req.session.user);
+            const user = User.findOne({email: req.session.user.email});
+            console.log('User data:', user);
+            req.status(200).json({message: 'Data fetched successfully', user: user});
+        }
         res.status(200).json({message: 'Data fetched successfully'});
     } catch (error) {
       
@@ -16,7 +24,7 @@ async function getUserData(req,res) {
 
 }
 
-async function setUserData(req,res) {
+async function register(req,res) {
 
     try {
       
@@ -26,7 +34,17 @@ async function setUserData(req,res) {
 
         const saltRounds = 10; // You can adjust this value
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-        console.log(name, email, numberPlate, phNo, password, hashedPassword);   
+        console.log(name, email, numberPlate, phNo,  hashedPassword); 
+        
+        req.session.user = {name, email, numberPlate, phNo, password: hashedPassword};
+
+        const preExisitingUser = await User.findOne({email: email})
+
+        if(preExisitingUser){
+            console.log('User already exists Login Instead');
+            return res.json({message: 'User already exists'});
+        }
+       
         const user = new User({name, email, numberPlate, phNo, password: hashedPassword});
         
         user.save();
@@ -38,13 +56,89 @@ async function setUserData(req,res) {
     }
 
 }
+const login = async(req, res) => {
+
+    try {
+        await connectDB();
+        const {email, password} = req.body;
+        if(!email || !password) {
+            return res.status(400).json({message: 'Please enter all fields'});
+        }
+        const user = await User.findOne({ email: email });
+        if(!user) {
+            return res.status(400).json({message: 'User not found'});
+        }
+       bcrypt.compare(password, user.password, (err, result) => {
+            if(result){
+                req.session.user = user;
+                return res.json({message: 'Login successful', user: user});
+            }else{
+                return res.status(400).json({message: 'Password incorrect'});
+            }
+       });
+
+       
+
+        
+    }catch(error) {
+        console.error('error:', error);
+        return res.status(500).json({message: 'Server error'});
+    }
+
+
+}
 
 
 const getAbout = async(req, res) => {
-    res.status(200).json({message: 'About page'});
+    try {
+        const response = await axios.get(`https://nominatim.openstreetmap.org/reverse`, {
+            params: {
+                lat: 15.587195,
+                lon: 73.948034,
+                format: 'json',
+            },
+        });
+
+        if (response.data) {
+            console.log('Location Data:', response.data);
+        } else {
+            console.log('No data found for the given coordinates.');
+        }
+    } catch (error) {
+        console.error('Error fetching location:', error.message);
+    }
+    
+}
+
+const getLocationDetails = async(req, res) => {
+
+    const {lat, lon} = await req.body;
+    console.log(lat, lon);
+    try {
+        const response = await axios.get(`https://nominatim.openstreetmap.org/reverse`, {
+            params: {
+                lat: lat,
+                lon: lon,
+                format: 'json',
+            },
+        });
+
+        if (response.data) {
+            console.log('Location Data:', response.data);
+            
+        } else {
+            console.log('No data found for the given coordinates.');
+        }
+        res.status(200).json({message: 'Data fetched successfully', data: response.data});
+    } catch (error) {
+        console.error('Error fetching location:', error.message);
+        res.status(500).json({message: 'Server error'});
+    }
 }
 export {
     getUserData,
-    setUserData,
-    getAbout
+    register,
+    getAbout,
+    getLocationDetails,
+    login
 };

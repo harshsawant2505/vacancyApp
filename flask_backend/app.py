@@ -18,6 +18,23 @@ def home():
 def contacts():
     return jsonify(contact)
 
+@app.route("/getParkingSpots", methods=["POST"])
+def getParkingSpots():
+    if request.is_json:
+        data = request.get_json()
+        city = data.get('city')
+        print(city)
+        print("Data received:", data)
+        response = {
+            'received_data': data,
+            'status': 'success'
+        }
+        return jsonify(response)
+    else:
+        print("Request is not JSON")
+        return jsonify({'error': 'Request must be JSON'}), 400
+
+
 @app.route("/", methods=["POST"])
 def set():
    # Check if request contains JSON data
@@ -41,4 +58,4 @@ def set():
 
 
 if __name__ == "__main__":
-    app.run(host = 'localhost', port=8000, debug=True)
+    app.run(host = 'localhost', port=8000, debug=True)  
