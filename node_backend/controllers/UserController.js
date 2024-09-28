@@ -185,6 +185,19 @@ const getParkingAllDetails = async(req, res) => {
 
 }
 
+const getCorrespondingData = async(req, res) => {
+    try {
+        await connectDB();
+        const {lat, lon} = await req.body;
+        console.log(lat, lon);
+        const data = await DataSet.findOne({gps: `${lat} ${lon}`});
+        console.log(data);
+        res.status(200).send(data);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 export {
     getUserData,
@@ -194,5 +207,6 @@ export {
     login,
     setDataSet,
     getParkingDetails,
-    getParkingAllDetails
+    getParkingAllDetails,
+    getCorrespondingData
 };
