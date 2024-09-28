@@ -1,4 +1,6 @@
+import 'package:bits_hackathon/globalvariables.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
 class ParkingCard extends StatefulWidget {
   final Map entry;
@@ -9,6 +11,30 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
+  double dis = 0;
+  final extraController = MapController();
+  void getdis() async {
+    GeoPoint place = GeoPoint(
+        latitude:
+            double.tryParse(widget.entry['gps'].toString().split(" ").first) ??
+                0,
+        longitude:
+            double.tryParse(widget.entry['gps'].toString().split(" ").last) ??
+                0);
+
+    dis = await getDistance(place, extraController);
+    setState(() {
+      dis = dis;
+    });
+  }
+
+  @override
+  void initState() {
+    getdis();
+    extraController.osmBaseController.clearAllRoads();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -39,7 +65,7 @@ class _ParkingCardState extends State<ParkingCard> {
                       Row(
                         children: [
                           Text(
-                            "100m",
+                            "$dis km",
                             style: const TextStyle(fontSize: 14),
                           ),
                           const Spacer(),

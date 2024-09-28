@@ -1,3 +1,4 @@
+import 'package:bits_hackathon/globalvariables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,6 +33,8 @@ class _MapPageState extends State<MapPage> {
     try {
       // Enable user tracking
       await mapController.enableTracking();
+      latitude = mapController.initPosition!.latitude;
+      longitude = mapController.initPosition!.longitude;
     } catch (e) {
       logger.e("ERROR enabling user tracking: $e");
       Fluttertoast.showToast(
