@@ -1,3 +1,4 @@
+import 'package:bits_hackathon/mobile/Pages/dashboard/dashboardpopup.dart';
 import 'package:bits_hackathon/mobile/Pages/loginpage.dart';
 import 'package:flutter/material.dart';
 
@@ -53,10 +54,15 @@ class _MainSearchBarState extends State<MainSearchBar> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return const LoginPage();
-                        }));
+                        // Navigator.push(context,
+                        //     MaterialPageRoute(builder: (context) {
+                        //   return const LoginPage();
+                        // }));
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const AccountPopUp();
+                            });
                       },
                       child: const CircleAvatar(
                         radius: 20,

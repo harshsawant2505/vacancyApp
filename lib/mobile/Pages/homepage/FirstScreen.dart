@@ -2,7 +2,6 @@
 
 import 'package:bits_hackathon/global%20widgets/parkingcard.dart';
 import 'package:bits_hackathon/global%20widgets/searchbar.dart';
-import 'package:bits_hackathon/mobile/Pages/loginpage.dart';
 import 'package:bits_hackathon/mobile/Pages/map%20page/mappage.dart';
 import 'package:flutter/material.dart';
 
