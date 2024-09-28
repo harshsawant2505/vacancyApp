@@ -13,76 +13,83 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   final mapController = MapController.withPosition(
     initPosition: GeoPoint(
-      latitude: 15.5010,
-      longitude: 73.8294,
+      latitude: 15.5010, // Placeholder coordinates
+      longitude: 73.8294, // Placeholder coordinates
     ),
   );
+
   Logger logger = Logger();
 
-  // Function to get user's current location and add a marker
-  Future<void> addUserLocationMarker() async {
+  @override
+  void dispose() {
+    // Dispose the controller when the widget is disposed
+    mapController.dispose();
+    super.dispose();
+  }
+
+  // Function to enable user tracking (without adding a duplicate marker)
+  Future<void> _enableUserTracking() async {
     try {
-      // Check location permission and request if needed
+      // Enable user tracking
       await mapController.enableTracking();
-      // Get user's current location
-      GeoPoint currentLocation = await mapController.myLocation();
-      // Add a marker at user's location
-      await mapController.addMarker(
-        currentLocation,
-        markerIcon: const MarkerIcon(
-          icon: Icon(
-            Icons.person_pin_circle,
-            color: Colors.blue,
-            size: 48,
-          ),
-        ),
-      );
     } catch (e) {
-      logger.e("ERROR: $e");
+      logger.e("ERROR enabling user tracking: $e");
       Fluttertoast.showToast(
-          msg: "Something went wrong!", toastLength: Toast.LENGTH_LONG);
+          msg: "Something went wrong while enabling user tracking!",
+          toastLength: Toast.LENGTH_LONG);
     }
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    mapController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return OSMFlutter(
-        controller: mapController,
-        osmOption: OSMOption(
-          userTrackingOption: const UserTrackingOption(
-            enableTracking: true,
-            unFollowUser: false,
-          ),
-          zoomOption: const ZoomOption(
-            initZoom: 8,
-            minZoomLevel: 3,
-            maxZoomLevel: 19,
-            stepZoom: 1.0,
-          ),
-          userLocationMarker: UserLocationMaker(
-            personMarker: const MarkerIcon(
-              icon: Icon(
-                Icons.location_history_rounded,
-                color: Colors.red,
-                size: 48,
+    return FutureBuilder(
+      future: Future.delayed(const Duration(milliseconds: 500)),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          // Once delay is done, render the map
+          return SizedBox(
+            child: OSMFlutter(
+              controller: mapController,
+              onMapIsReady: (isReady) async {
+                if (isReady) {
+                  logger.d("MAP READY");
+                  await _enableUserTracking(); // Enable user tracking
+                } else {
+                  logger.d("MAP not ready");
+                }
+              },
+              osmOption: OSMOption(
+                zoomOption: const ZoomOption(
+                  initZoom: 12, // Zoom level to properly view the markers
+                  minZoomLevel: 3,
+                  maxZoomLevel: 19,
+                  stepZoom: 1.0,
+                ),
+                userLocationMarker: UserLocationMaker(
+                  personMarker: const MarkerIcon(
+                    icon: Icon(
+                      Icons.location_history_rounded,
+                      color: Colors.red,
+                      size: 48,
+                    ),
+                  ),
+                  directionArrowMarker: const MarkerIcon(
+                    icon: Icon(
+                      Icons.double_arrow,
+                      size: 48,
+                    ),
+                  ),
+                ),
+                roadConfiguration: const RoadOption(
+                  roadColor: Colors.yellowAccent,
+                ),
               ),
             ),
-            directionArrowMarker: const MarkerIcon(
-              icon: Icon(
-                Icons.double_arrow,
-                size: 48,
-              ),
-            ),
-          ),
-          roadConfiguration: const RoadOption(
-            roadColor: Colors.yellowAccent,
-          ),
-        ));
+          );
+        }
+        // Display a loading indicator while waiting for the Future
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
   }
 }
