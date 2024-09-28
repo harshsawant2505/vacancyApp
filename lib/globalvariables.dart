@@ -19,7 +19,7 @@ Future<double> getDistance(GeoPoint place) async {
   GeoPoint g = GeoPoint(latitude: 15, longitude: 73);
 
   try {
-    print("entered");
+    logger.d("Entered");
     RoadInfo road = await mapController.drawRoad(
       g,
       place,
