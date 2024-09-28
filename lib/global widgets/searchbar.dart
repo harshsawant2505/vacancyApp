@@ -11,6 +11,10 @@ class MainSearchBar extends StatefulWidget {
 }
 
 class _MainSearchBarState extends State<MainSearchBar> {
+  void getData(String name) async {
+    print(name);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,6 +31,9 @@ class _MainSearchBarState extends State<MainSearchBar> {
                 controller: widget.controller,
                 cursorColor: Colors.black,
                 cursorWidth: 1,
+                onSubmitted: (value) {
+                  getData(value);
+                },
                 decoration: const InputDecoration(
                     prefixIcon: Icon(
                       Icons.search_rounded,
