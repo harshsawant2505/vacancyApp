@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:logger/logger.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -9,13 +11,38 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  // or set manually init position
   final mapController = MapController.withPosition(
     initPosition: GeoPoint(
       latitude: 15.5010,
       longitude: 73.8294,
     ),
   );
+  Logger logger = Logger();
+
+  // Function to get user's current location and add a marker
+  Future<void> addUserLocationMarker() async {
+    try {
+      // Check location permission and request if needed
+      await mapController.enableTracking();
+      // Get user's current location
+      GeoPoint currentLocation = await mapController.myLocation();
+      // Add a marker at user's location
+      await mapController.addMarker(
+        currentLocation,
+        markerIcon: const MarkerIcon(
+          icon: Icon(
+            Icons.person_pin_circle,
+            color: Colors.blue,
+            size: 48,
+          ),
+        ),
+      );
+    } catch (e) {
+      logger.e("ERROR: $e");
+      Fluttertoast.showToast(
+          msg: "Something went wrong!", toastLength: Toast.LENGTH_LONG);
+    }
+  }
 
   @override
   void dispose() {

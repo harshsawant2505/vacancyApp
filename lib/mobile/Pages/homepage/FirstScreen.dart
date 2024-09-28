@@ -4,6 +4,7 @@ import 'package:bits_hackathon/global%20widgets/parkingcard.dart';
 import 'package:bits_hackathon/global%20widgets/searchbar.dart';
 import 'package:bits_hackathon/mobile/Pages/map%20page/mappage.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class FirstScreen extends StatefulWidget {
   const FirstScreen({super.key});
@@ -14,6 +15,20 @@ class FirstScreen extends StatefulWidget {
 
 class _FirstScreenState extends State<FirstScreen> {
   final TextEditingController controller = TextEditingController();
+
+  Future<void> checkLocationPermission() async {
+    //function to check the user permission if it's granted or not.
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkLocationPermission();
+  }
 
   @override
   Widget build(BuildContext context) {
