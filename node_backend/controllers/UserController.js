@@ -3,6 +3,8 @@ import User from "../models/UserModel.js";
 import connectDB from "../config.js";
 import axios from "axios";
 import bcrypt from 'bcrypt';
+import DataSet from "../models/DataSet.js";
+
 
 
 async function getUserData(req,res) {
@@ -88,6 +90,20 @@ const login = async(req, res) => {
 
 }
 
+const setDataSet = async(req, res) => {
+
+    try {
+            await connectDB();
+       
+        const data = await DataSet.findOneAndUpdate({gps: '15.588398 73.947827'},{occupied: 1} ,{new: true});
+        console.log('Data:', data);
+            res.status(200).json({data});
+        
+    } catch (error) {
+        console.log('Error:', error);
+    }
+}
+
 
 const getAbout = async(req, res) => {
     try {
@@ -135,10 +151,48 @@ const getLocationDetails = async(req, res) => {
         res.status(500).json({message: 'Server error'});
     }
 }
+
+const getParkingDetails = async(req, res) => {
+
+    
+    try {
+        await connectDB();
+    const {city} = await req.body;
+    console.log(city);
+    const data = await DataSet.find({city: city});
+    console.log(data);
+    res.status(200).send(data);
+
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+const getParkingAllDetails = async(req, res) => {
+
+    
+    try {
+        await connectDB();
+
+    const data = await DataSet.find({});
+    console.log(data);
+    res.status(200).send(data);
+
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+
 export {
     getUserData,
     register,
     getAbout,
     getLocationDetails,
-    login
+    login,
+    setDataSet,
+    getParkingDetails,
+    getParkingAllDetails
 };
