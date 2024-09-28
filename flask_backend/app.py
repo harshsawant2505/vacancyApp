@@ -1,6 +1,7 @@
 
 from config import app
 from flask import request, jsonify
+from models.getNearbyPark import get_city_data
 
 contact = {
     "name": "Jane smith",
@@ -11,7 +12,9 @@ contact = {
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({"data": "Data from python  sdgdgerver get route"})
+    data = get_city_data('vasco')
+    print(data)
+    return jsonify({"data": data})
 
 
 @app.route("/contacts", methods=["GET"])
