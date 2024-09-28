@@ -14,43 +14,60 @@ class ParkingCard extends StatefulWidget {
 }
 
 class _ParkingCardState extends State<ParkingCard> {
+  bool paid = true;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Material(
-        elevation: 10,
-        borderRadius: BorderRadius.circular(20),
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.title,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "${widget.distance}m",
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                    Text(
-                      "${widget.vacancy} spots remaining",
-                      style: const TextStyle(fontSize: 14, color: Colors.green),
-                    ),
-                  ],
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Material(
+          elevation: 10,
+          borderRadius: BorderRadius.circular(20),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "${widget.distance}m",
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                          const Spacer(),
+                          Text(
+                            paid ? "Paid" : "Free",
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: paid ? Colors.red : Colors.green),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        "${widget.vacancy} spots remaining",
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.green),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
