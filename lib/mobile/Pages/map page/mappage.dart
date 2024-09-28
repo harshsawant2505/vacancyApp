@@ -13,13 +13,32 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   final mapController = MapController.withPosition(
     initPosition: GeoPoint(
-      latitude: 15.5010,
-      longitude: 73.8294,
+      latitude: 34.0522, // Latitude for Downtown LA
+      longitude: -118.2437, // Longitude for Downtown LA
     ),
   );
   Logger logger = Logger();
 
-  // Function to get user's current location and add a marker
+  // Function to add a static marker at Downtown LA
+  Future<void> _addStaticMarker() async {
+    GeoPoint downtownLA = GeoPoint(latitude: 34.0522, longitude: -118.2437);
+    try {
+      await mapController.addMarker(
+        downtownLA,
+        markerIcon: const MarkerIcon(
+          icon: Icon(
+            Icons.location_pin,
+            color: Colors.blue,
+            size: 48,
+          ),
+        ),
+      );
+      logger.d("Marker added");
+    } catch (e) {
+      logger.e("ERROR: $e");
+    }
+  }
+
   Future<void> addUserLocationMarker() async {
     try {
       // Check location permission and request if needed
@@ -37,6 +56,7 @@ class _MapPageState extends State<MapPage> {
           ),
         ),
       );
+      logger.d('User location: $currentLocation');
     } catch (e) {
       logger.e("ERROR: $e");
       Fluttertoast.showToast(
@@ -46,43 +66,63 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void dispose() {
-    super.dispose();
+    // Dispose the controller when the widget is disposed
     mapController.dispose();
+    super.dispose();
+    addUserLocationMarker();
   }
 
   @override
   Widget build(BuildContext context) {
-    return OSMFlutter(
-        controller: mapController,
-        osmOption: OSMOption(
-          userTrackingOption: const UserTrackingOption(
-            enableTracking: true,
-            unFollowUser: false,
-          ),
-          zoomOption: const ZoomOption(
-            initZoom: 8,
-            minZoomLevel: 3,
-            maxZoomLevel: 19,
-            stepZoom: 1.0,
-          ),
-          userLocationMarker: UserLocationMaker(
-            personMarker: const MarkerIcon(
-              icon: Icon(
-                Icons.location_history_rounded,
-                color: Colors.red,
-                size: 48,
+    return FutureBuilder(
+      future: Future.delayed(const Duration(milliseconds: 500)),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          // Once delay is done, render the map
+          return SizedBox(
+            child: OSMFlutter(
+              controller: mapController,
+              onMapIsReady: (isReady) async {
+                if (isReady) {
+                  logger.d("MAP READY");
+
+                  await _addStaticMarker();
+                } else {
+                  logger.d("MAP not ready");
+                }
+              },
+              osmOption: OSMOption(
+                zoomOption: const ZoomOption(
+                  initZoom: 12, // Zoom level to properly view the marker
+                  minZoomLevel: 3,
+                  maxZoomLevel: 19,
+                  stepZoom: 1.0,
+                ),
+                userLocationMarker: UserLocationMaker(
+                  personMarker: const MarkerIcon(
+                    icon: Icon(
+                      Icons.location_history_rounded,
+                      color: Colors.red,
+                      size: 48,
+                    ),
+                  ),
+                  directionArrowMarker: const MarkerIcon(
+                    icon: Icon(
+                      Icons.double_arrow,
+                      size: 48,
+                    ),
+                  ),
+                ),
+                roadConfiguration: const RoadOption(
+                  roadColor: Colors.yellowAccent,
+                ),
               ),
             ),
-            directionArrowMarker: const MarkerIcon(
-              icon: Icon(
-                Icons.double_arrow,
-                size: 48,
-              ),
-            ),
-          ),
-          roadConfiguration: const RoadOption(
-            roadColor: Colors.yellowAccent,
-          ),
-        ));
+          );
+        }
+        // Display a loading indicator while waiting for the Future
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
   }
 }
