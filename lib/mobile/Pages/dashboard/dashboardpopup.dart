@@ -13,9 +13,9 @@ class AccountPopUp extends StatelessWidget {
     return FractionallySizedBox(
       heightFactor: 0.55,
       child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey.shade200,
-          borderRadius: const BorderRadius.vertical(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(
             top: Radius.circular(20),
           ),
         ),
@@ -25,7 +25,7 @@ class AccountPopUp extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              token['data'] == "none"
+              token['type'] == "none"
                   ? Row(
                       children: [
                         const Text("Not logged in "),
@@ -44,22 +44,22 @@ class AccountPopUp extends StatelessWidget {
                         )
                       ],
                     )
-                  : Column(
+                  :  Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          token['name'],
-                          style: const TextStyle(fontSize: 20),
+                           token['name'],
+                          style: TextStyle(fontSize: 20),
                         ),
                         Text(
                           token['email'],
-                          style: const TextStyle(fontSize: 13),
+                          style: TextStyle(fontSize: 13),
                         ),
                       ],
                     ),
               Visibility(
-                visible: token['data'] != 'none',
+                visible: token['type'] != 'none',
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
@@ -74,13 +74,12 @@ class AccountPopUp extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const ComplaintsPage();
                   }));
                 },
-                child:
-                    const MenuButton(icon: Icons.feedback, text: "Emergency"),
+                child: const MenuButton(icon: Icons.feedback, text: "Complain"),
               ),
               Visibility(
                 visible: token['type'] == 'police',

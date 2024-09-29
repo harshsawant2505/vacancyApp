@@ -74,6 +74,7 @@ class _ParkingCardState extends State<ParkingCard> {
                         style: const TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w600),
                       ),
+                      const SizedBox(height: 25),
                       Row(
                         children: [
                           Text(
@@ -81,16 +82,36 @@ class _ParkingCardState extends State<ParkingCard> {
                             style: const TextStyle(fontSize: 14),
                           ),
                           const Spacer(),
-                          Text(
-                            widget.entry['type'],
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: widget.entry['type']
-                                            .toString()
-                                            .toLowerCase() ==
-                                        'paid'
-                                    ? Colors.red
-                                    : Colors.green),
+                          Container(
+                            child: widget.entry['type'] == 'free'
+                                ? const Text(
+                                    "Free",
+                                    style: TextStyle(color: Colors.green),
+                                  )
+                                : GestureDetector(
+                                    onTap: () {
+                                      try {
+                                        const uri = "";
+                                        launchUrl(Uri.parse(uri));
+                                      } catch (e) {
+                                        print(e.toString());
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 5),
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: Colors.lightBlue[300]),
+                                      child: const Text(
+                                        "Pay Now",
+                                        style: TextStyle(color: Colors.white),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
                           ),
                         ],
                       ),
@@ -149,12 +170,17 @@ class _ParkingCardState extends State<ParkingCard> {
                           GestureDetector(
                             onTap: goToMaps,
                             child: Container(
+                              width: 120,
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
                                   color: Colors.lightBlue[300]),
-                              child: const Text("Start traveling"),
+                              child: const Text(
+                                "Start traveling",
+                                style: TextStyle(color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ],

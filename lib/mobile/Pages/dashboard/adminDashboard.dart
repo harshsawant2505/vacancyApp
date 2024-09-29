@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as h;
-import 'package:logger/logger.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -12,9 +11,7 @@ class AdminDashboard extends StatefulWidget {
 
 class _AdminDashboardState extends State<AdminDashboard> {
   final controller = TextEditingController();
-  Logger logger = Logger();
   List<Map> gpsList = [];
-
   void getData(String name) async {
     const url = "https://node-api-5kc9.onrender.com/parkingdetails";
     final Map<String, dynamic> jsonData = {
@@ -41,20 +38,20 @@ class _AdminDashboardState extends State<AdminDashboard> {
         });
       }
     } catch (e) {
-      logger.e("ERROR: $e");
+      print(e.toString());
     }
   }
 
   @override
   void initState() {
     super.initState();
+    print("entered");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade300,
         centerTitle: true,
         title: const Text("Police DashBoard"),
       ),
@@ -106,7 +103,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
 class Graph extends StatefulWidget {
   final List<Map> gpsList;
-
   const Graph({super.key, required this.gpsList});
 
   @override
@@ -154,7 +150,6 @@ class _GraphState extends State<Graph> {
 class GraphBar extends StatefulWidget {
   final Map entry;
   final double percent;
-
   const GraphBar({super.key, required this.entry, required this.percent});
 
   @override

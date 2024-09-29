@@ -30,7 +30,7 @@ class _FirstScreenState extends State<FirstScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('session_token', jsonEncode(token));
     print("In the set session");
-   final temp =  setSession({"data":"the ses"});
+    final temp = setSession({"data": "the ses"});
     print(temp);
   }
 
@@ -46,12 +46,11 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   void getgetsession() async {
-   
     final s = await getSession();
- 
-    token = json.decode(s ?? '{"data":"none"}');
+
+    token = json.decode(s ?? '{"type":"none"}');
     print(token);
-    
+
     // token = {"data":"user"};
   }
 
