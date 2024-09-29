@@ -3,11 +3,12 @@ import 'dart:ui';
 import 'package:bits_hackathon/globalvariables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:latlong2/latlong.dart';
 
 import 'package:geolocator/geolocator.dart';
-import 'package:open_route_service/open_route_service.dart'; // Import geolocator
+import 'package:open_route_service/open_route_service.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -63,6 +64,7 @@ class _MapScreenState extends State<MapScreen> {
       isLoading = false;
     });
   }
+
   // Function to get the user's current location
   Future<void> _determinePosition() async {
     bool serviceEnabled;
@@ -108,59 +110,45 @@ class _MapScreenState extends State<MapScreen> {
         ),
       );
       userLocationSet = true;
-      mapController.move(userLocation, 16.5); // Move to the user's location
+      mapController.move(userLocation, 16.5);
+      Fluttertoast.showToast(
+          webPosition: "bottom center",
+          msg: "Location might not be 100% accurate.",
+          timeInSecForIosWeb: 10,
+          backgroundColor: Colors.red,
+          webBgColor: "red",
+          textColor: Colors.black87);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          FlutterMap(
-            mapController: mapController,
-            options: MapOptions(
-              initialZoom: 16,
-              initialCenter: myPoint,
-              // onTap: (tapPosition, latLng) => _handleTap(latLng),
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                userAgentPackageName: 'dev.fleaflet.flutter_map.example',
-              ),
-              MarkerLayer(
-                markers: markers,
-              ),
-              
-              PolylineLayer(
-                polylineCulling: false,
-                polylines: [
-                  Polyline(
-                    points: points,
-                    color: Colors.black,
-                    strokeWidth: 5,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Visibility(
-            visible: isLoading,
-            child: Container(
-              color: Colors.black.withOpacity(0.5),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
+    return FlutterMap(
+      mapController: mapController,
+      options: MapOptions(
+        initialZoom: 16,
+        initialCenter: myPoint,
+        // onTap: (tapPosition, latLng) => _handleTap(latLng),
       ),
+      children: [
+        TileLayer(
+          urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+          userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+        ),
+        MarkerLayer(
+          markers: markers,
+        ),
+        PolylineLayer(
+          polylineCulling: false,
+          polylines: [
+            Polyline(
+              points: points,
+              color: Colors.black,
+              strokeWidth: 5,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

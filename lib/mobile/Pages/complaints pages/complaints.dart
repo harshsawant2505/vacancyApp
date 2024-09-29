@@ -71,7 +71,7 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
                 leading: const Icon(Icons.call),
                 title: const Text("Senior citizen helpline: 1090"),
                 onTap: () {
-                  //TODO give the redirector
+                
                   _makePhoneCall('tel:1090');
                 },
               ),
