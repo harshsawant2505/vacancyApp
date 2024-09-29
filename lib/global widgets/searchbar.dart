@@ -62,13 +62,14 @@ class _MainSearchBarState extends State<MainSearchBar> {
                 cursorColor: Colors.black,
                 cursorWidth: 1,
                 onSubmitted: (value) {
-                  if(value.isNotEmpty){
-                  getData(value.toLowerCase());
+                  if (value.isNotEmpty) {
+                    getData(value.toLowerCase());
                   }
-                  else{
-                    setState(() {
-                      
-                    });
+                },
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    widget.func();
+                    setState(() {});
                   }
                 },
                 decoration: const InputDecoration(

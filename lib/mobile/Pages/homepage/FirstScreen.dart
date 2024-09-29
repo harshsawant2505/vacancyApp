@@ -18,6 +18,7 @@ class FirstScreen extends StatefulWidget {
 class _FirstScreenState extends State<FirstScreen> {
   final TextEditingController controller = TextEditingController();
   double currentLat = 0, currentLon = 0;
+  bool isLoading = true;
   Future<void> checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -44,13 +45,6 @@ class _FirstScreenState extends State<FirstScreen> {
     await prefs.remove('session_token');
   }
 
-  void loadAgain() {
-    setState(() {
-      parkingSpots = parkingSpots;
-    });
-    // print(parkingSpots);
-  }
-
   void getgetsession() async {
    
     final s = await getSession();
@@ -67,6 +61,7 @@ class _FirstScreenState extends State<FirstScreen> {
     const url = "https://node-api-5kc9.onrender.com/allparkingdetails";
 
     try {
+      isLoading = true;
       final res = await h.get(Uri.parse(url));
       // print(res.body);
 
@@ -80,14 +75,12 @@ class _FirstScreenState extends State<FirstScreen> {
           return splitGps.map((val) => (val)).toList();
         }).toList();
 
-        //final List
-        logger.d(gpsList);
-
-        setState(() {});
+        setState(() {
+          parkingSpots = parkingSpots;
+          isLoading = false;
+        });
       }
-    } catch (e) {
-      logger.e("ERROR: ${e.toString()}");
-    }
+    } catch (e) {}
   }
 
   List<List<dynamic>> sortedCoordinates = [];
@@ -102,14 +95,12 @@ class _FirstScreenState extends State<FirstScreen> {
 
     for (var value in gpsList) {
       if (value[0].isEmpty) {
-        logger.d("Skipped one value");
       } else {
         double distance = CustomDistanceCalculator().calculateDistance(
             currentLat,
             currentLon,
             double.tryParse(value[0]) ?? 0,
             double.tryParse(value[1]) ?? 0);
-        logger.d(distance);
         sortedCoordinates.add([value[0], value[1], distance]);
       }
     }
@@ -121,7 +112,6 @@ class _FirstScreenState extends State<FirstScreen> {
         .map((coords) => [coords[0], coords[1], coords[2]])
         .toList();
     parkingSpots.clear();
-    logger.d("Sorted: ${sortedCoordinates.toString()}");
 
     for (int i = 0; i < 10 && i < sortedCoordinates.length; i++) {
       final lat = sortedCoordinates[i][0];
@@ -140,11 +130,8 @@ class _FirstScreenState extends State<FirstScreen> {
         if (res.statusCode == 200) {
           final Map something = json.decode(res.body);
           parkingSpots.add(something);
-          logger.d(parkingSpots.toString());
         }
-      } catch (e) {
-        logger.e("ERROR: ${e.toString()}");
-      }
+      } catch (e) {}
     }
     setState(() {
       parkingSpots = parkingSpots;
@@ -178,7 +165,7 @@ class _FirstScreenState extends State<FirstScreen> {
             ),
             MainSearchBar(
               controller: controller,
-              func: loadAgain,
+              func: getAllData,
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -192,8 +179,10 @@ class _FirstScreenState extends State<FirstScreen> {
                         topLeft: Radius.circular(25),
                         topRight: Radius.circular(25))),
                 child: parkingSpots.isEmpty
-                    ? const Center(
-                        child: Text("No result found"),
+                    ? Center(
+                        child: isLoading
+                            ? const CircularProgressIndicator()
+                            : const Text("No result found"),
                       )
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),

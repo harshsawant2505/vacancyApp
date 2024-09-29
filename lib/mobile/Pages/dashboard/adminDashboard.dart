@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as h;
 
-List<Map> gpsList = [];
-
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
 
@@ -13,13 +11,13 @@ class AdminDashboard extends StatefulWidget {
 
 class _AdminDashboardState extends State<AdminDashboard> {
   final controller = TextEditingController();
+  List<Map> gpsList = [];
   void getData(String name) async {
     const url = "https://node-api-5kc9.onrender.com/parkingdetails";
     final Map<String, dynamic> jsonData = {
       'city': name,
     };
     try {
-      // final res = await http.post(Uri.parse(url), body: {"city": name});
       final res = await h.post(
         Uri.parse(url),
         headers: {
@@ -35,8 +33,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
         gpsList.clear();
         gpsList.addAll(castedList);
-        setState(() {});
-        print(gpsList);
+        setState(() {
+          gpsList = gpsList;
+        });
       }
     } catch (e) {
       print(e.toString());
@@ -45,8 +44,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   void initState() {
-    getData("panaji");
     super.initState();
+    print("entered");
   }
 
   @override
@@ -65,9 +64,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DropdownMenu(
-                initialSelection: "Panaji",
                 dropdownMenuEntries: const [
                   DropdownMenuEntry(value: 'panaji', label: "Panaji"),
+                  DropdownMenuEntry(value: 'porvorim', label: "Porvorim"),
                   DropdownMenuEntry(value: 'vasco', label: "Vasco"),
                   DropdownMenuEntry(value: 'bicholim', label: "Bicholim"),
                   DropdownMenuEntry(value: 'calangute', label: "Calangute"),
@@ -80,9 +79,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   DropdownMenuEntry(value: 'curchorem', label: "Curchorem"),
                 ],
                 onSelected: (value) {
-                  getData(value ?? "panaji");
                   setState(() {
-                    gpsList = gpsList;
+                    String lol = value!;
+                    print('yooo $lol');
+                    getData(lol);
                   });
                 },
                 hintText: "Location",
@@ -90,8 +90,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 controller: controller,
               ),
               Visibility(
-                  visible: controller.text.toString().isNotEmpty,
-                  child: const Graph()),
+                  visible: gpsList.isNotEmpty,
+                  child: Graph(
+                    gpsList: gpsList,
+                  )),
             ],
           ),
         ),
@@ -101,7 +103,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
 }
 
 class Graph extends StatefulWidget {
-  const Graph({super.key});
+  final List<Map> gpsList;
+  const Graph({super.key, required this.gpsList});
 
   @override
   State<Graph> createState() => _GraphState();
@@ -123,13 +126,19 @@ class _GraphState extends State<Graph> {
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
           child: ListView.builder(
               shrinkWrap: true,
-              itemCount: gpsList.length,
+              itemCount: widget.gpsList.length,
               itemBuilder: (context, index) {
-                double percent =
-                    (gpsList[index]['4w'] - gpsList[index]['4w_occ']) /
-                        gpsList[index]['4w'];
+                double percent = (widget.gpsList[index]['4w'] -
+                                widget.gpsList[index]['4w_occ']) /
+                            widget.gpsList[index]['4w'] !=
+                        0
+                    ? widget.gpsList[index]['4w']
+                    : 1;
+                if (percent > 1.00) {
+                  percent = 1.00;
+                }
                 return GraphBar(
-                  entry: gpsList[index],
+                  entry: widget.gpsList[index],
                   percent: percent,
                 );
               }),
@@ -167,27 +176,33 @@ class _GraphBarState extends State<GraphBar> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
             margin: const EdgeInsets.symmetric(horizontal: 2.5),
-            // width: MediaQuery.of(context).size.width - 30,
+            width: MediaQuery.of(context).size.width - 30,
             decoration: BoxDecoration(
                 color: Colors.grey, borderRadius: BorderRadius.circular(6)),
-            child: Row(
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-                Container(
-                  width:
-                      (widget.percent * MediaQuery.of(context).size.width) - 43,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3),
-                    color: widget.percent >= 0.50
-                        ? Colors.green
-                        : widget.percent >= 0.25
-                            ? Colors.orange
-                            : Colors.red,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    width: widget.percent == 0
+                        ? 5
+                        : (widget.percent * MediaQuery.of(context).size.width) -
+                            43,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3),
+                      color: widget.percent >= 0.50
+                          ? Colors.green
+                          : widget.percent >= 0.25
+                              ? Colors.orange
+                              : Colors.red,
+                    ),
                   ),
-                  child: Text(
-                    "${(widget.percent * 100).toStringAsFixed(0)}%",
-                    textAlign: TextAlign.center,
-                  ),
+                ),
+                Text(
+                  "${(widget.percent * 100).toStringAsFixed(0)}%",
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
