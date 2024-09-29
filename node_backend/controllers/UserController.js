@@ -32,7 +32,7 @@ async function register(req,res) {
       
         await connectDB();
         console.log("reached")
-        const {name, email, numberPlate, phNo, password } = req.body;
+        const {name, email,password,phNo, numberPlate} = req.body;
 
         const saltRounds = 10; // You can adjust this value
         const hashedPassword = await bcrypt.hash(password, saltRounds);

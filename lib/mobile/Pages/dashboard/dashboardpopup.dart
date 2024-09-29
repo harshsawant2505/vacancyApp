@@ -43,16 +43,16 @@ class AccountPopUp extends StatelessWidget {
                         )
                       ],
                     )
-                  : const Column(
+                  :  Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "name here",
+                           token['name'],
                           style: TextStyle(fontSize: 20),
                         ),
                         Text(
-                          "email@email.com",
+                          token['email'],
                           style: TextStyle(fontSize: 13),
                         ),
                       ],
