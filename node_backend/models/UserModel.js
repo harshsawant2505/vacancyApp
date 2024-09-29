@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema(
         },
         numberPlate: {
             type: String,
-            required: true,
+            default:"000"
         },
         phNo: {
             type: String,

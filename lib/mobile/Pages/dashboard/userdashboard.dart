@@ -1,7 +1,17 @@
+
+import 'package:bits_hackathon/globalvariables.dart';
+import 'package:bits_hackathon/mobile/Pages/homepage/FirstScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
+
+
+  Future<void> clearSession() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('session_token');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,21 +25,36 @@ class Dashboard extends StatelessWidget {
         children: [
           ListView(
             shrinkWrap: true,
-            padding: const EdgeInsets.only(left: 15),
-            children: const [
+            padding: const EdgeInsets.all(15),
+            children:[
               Text(
-                "Name",
-                style: TextStyle(fontSize: 25),
+                token['name'],
+                style: TextStyle(fontSize: 25), 
               ),
-              Text("email@email.com"),
+              Text(
+                token['type'],
+             
+              ),
+              Text(token['email']), 
+               Text("Phone number: ${token['phNo']}"),
+
+               ElevatedButton(
+              onPressed: () {
+                  clearSession();
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                    return const FirstScreen();
+                  }));
+              },
+              child:  const Text(
+                "Logout",
+                style: TextStyle(color: Colors.red),
+             
+             
+              ),
+            ),
             ],
           ),
-          ListView.builder(
-              shrinkWrap: true,
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return const MyVehicle();
-              })
+         
         ],
       ),
     );

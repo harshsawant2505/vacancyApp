@@ -33,6 +33,23 @@ const datasetschema = new mongoose.Schema(
         type: Number,
         default: 0
     },
+    "2w_occ":{
+        type: Number,
+        default:0
+    },
+    "4w_occ": {
+        type: Number,
+        default: 0
+    },
+    entry_cam:
+    {
+        type: String,
+        default:''
+    },
+    exit_cam:{
+        type: String,
+        default: ''
+    }
 }
 )
 export default mongoose.model('DataSet', datasetschema);

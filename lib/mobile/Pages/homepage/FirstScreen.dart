@@ -36,9 +36,13 @@ class _FirstScreenState extends State<FirstScreen> {
   Future<void> setSession(Map<String, dynamic> token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('session_token', jsonEncode(token));
+    print("In the set session");
+   final temp =  setSession({"data":"the ses"});
+    print(temp);
   }
 
   Future<String?> getSession() async {
+    print("infffffffffffffffffffffffff");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('session_token');
   }
@@ -49,8 +53,13 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   void getgetsession() async {
+   
     final s = await getSession();
-    token = json.decode(s ?? '{"type":"none"}');
+ 
+    token = json.decode(s ?? '{"data":"none"}');
+    print(token);
+    
+    // token = {"data":"user"};
   }
 
   List<List<String>> gpsList = [];
@@ -158,6 +167,7 @@ class _FirstScreenState extends State<FirstScreen> {
 
   @override
   void initState() {
+    print("Init hit");
     getgetsession();
     checkLocationPermission();
     if (controller.text.isEmpty) {

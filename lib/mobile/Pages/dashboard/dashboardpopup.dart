@@ -32,7 +32,7 @@ class AccountPopUp extends StatelessWidget {
                         GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
-                            Navigator.push(context,
+                            Navigator.pushReplacement(context,
                                 MaterialPageRoute(builder: (context) {
                               return const LoginPage();
                             }));
@@ -44,16 +44,16 @@ class AccountPopUp extends StatelessWidget {
                         )
                       ],
                     )
-                  : const Column(
+                  :  Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "name here",
+                           token['name'],
                           style: TextStyle(fontSize: 20),
                         ),
                         Text(
-                          "email@email.com",
+                          token['email'],
                           style: TextStyle(fontSize: 13),
                         ),
                       ],
@@ -83,6 +83,7 @@ class AccountPopUp extends StatelessWidget {
               ),
               Visibility(
                 visible: token['type'] == 'police',
+                //TODO: to be replaced with the initState condition when connected to backend
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(context,

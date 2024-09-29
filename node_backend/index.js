@@ -1,19 +1,18 @@
-import "dotenv"
+import {} from 'dotenv/config'
 import express from 'express';
 import session from "express-session";
 import cors from "cors";
 var app = express();
-import {getAbout, getLocationDetails, getUserData, register, login, setDataSet, getParkingDetails, getParkingAllDetails,getCorrespondingData} from './controllers/UserController.js';
-
+import {getAbout, getLocationDetails, getUserData, register, login, setDataSet, getParkingDetails, getParkingAllDetails,getCorrespondingData, registerParking, registerPolice} from './controllers/UserController.js';
 
 app.use(cors());
 app.use(express.json());
 
-const sessionKey =  !process.env.SESSIONKEY;
+const sessionKey =  process.env.SESSIONKEY;
 console.log(sessionKey);
 
 app.use(session({
-  secret: "sfsdfksdkfjsdjf", // Change this to a random string
+  secret: sessionKey, // Change this to a random string
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // Set to true if using HTTPS
@@ -36,6 +35,10 @@ app.post('/getlocation', getLocationDetails);
 app.post('/parkingdetails', getParkingDetails);
 
 app.get('/allparkingdetails', getParkingAllDetails);
+
+app.post('/registerPolice', registerPolice) 
+
+app.post('/registerParking', registerParking) 
 
 const PORT = process.env.PORT || 3001;
 

@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 List<Map> parkingSpots = [],closets=[];
 bool isLoading = true;
@@ -25,3 +28,6 @@ class CustomDistanceCalculator {
     return calculatedDistanceKm * 1.91 / 1000;
   }
 }
+
+
+
