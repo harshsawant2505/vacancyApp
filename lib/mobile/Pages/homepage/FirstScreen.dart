@@ -234,6 +234,7 @@ class _FirstScreenState extends State<FirstScreen> {
                                           .split(' ')
                                           .last) ??
                                       0);
+                          print(parkingSpots[index]['upiurl'] == "");
                           return ParkingCard(
                             entry: parkingSpots[index],
                             dis: dis,
