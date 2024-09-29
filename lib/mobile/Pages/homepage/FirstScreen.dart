@@ -65,7 +65,7 @@ class _FirstScreenState extends State<FirstScreen> {
         List<dynamic> data = json.decode(res.body);
 
         gpsList = data.map((spot) {
-          String gpsString = spot['gps']; // Get the GPS string
+          String gpsString = spot['gps']; 
           List<String> splitGps =
               gpsString.split(' '); // Split the string by comma
           return splitGps.map((val) => (val)).toList();

@@ -2,6 +2,7 @@ import 'package:bits_hackathon/globalvariables.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ParkingCard extends StatefulWidget {
@@ -14,13 +15,14 @@ class ParkingCard extends StatefulWidget {
 
 class _ParkingCardState extends State<ParkingCard> {
   double dis = 0, lat = 0, lon = 0;
+  Logger logger = Logger();
   void getdis() async {
     Position position = await Geolocator.getCurrentPosition(
         locationSettings:
             const LocationSettings(accuracy: LocationAccuracy.high));
     dis = CustomDistanceCalculator()
         .calculateDistance(position.latitude, position.longitude, lat, lon);
-    print('distance: $dis');
+    logger.d("Distance: $dis");
     setState(() {
       dis = dis;
     });
@@ -52,7 +54,7 @@ class _ParkingCardState extends State<ParkingCard> {
     return GestureDetector(
       onTap: () {
         final newplace = LatLng(lat, lon);
-        mapController.move(newplace, 15);
+        mapController.move(newplace, 20);
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
