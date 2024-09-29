@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 class ParkingCard extends StatefulWidget {
   final Map entry;
   final double dis;
+
   const ParkingCard({super.key, required this.entry, required this.dis});
 
   @override

@@ -1,4 +1,5 @@
 import 'package:bits_hackathon/globalvariables.dart';
+import 'package:bits_hackathon/mobile/Pages/complaints%20pages/complaints.dart';
 import 'package:bits_hackathon/mobile/Pages/dashboard/adminDashboard.dart';
 import 'package:bits_hackathon/mobile/Pages/dashboard/userdashboard.dart';
 import 'package:bits_hackathon/mobile/Pages/loginpage.dart';
@@ -12,9 +13,9 @@ class AccountPopUp extends StatelessWidget {
     return FractionallySizedBox(
       heightFactor: 0.55,
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(
+        decoration: BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: const BorderRadius.vertical(
             top: Radius.circular(20),
           ),
         ),
@@ -43,17 +44,17 @@ class AccountPopUp extends StatelessWidget {
                         )
                       ],
                     )
-                  :  Column(
+                  : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                           token['name'],
-                          style: TextStyle(fontSize: 20),
+                          token['name'],
+                          style: const TextStyle(fontSize: 20),
                         ),
                         Text(
                           token['email'],
-                          style: TextStyle(fontSize: 13),
+                          style: const TextStyle(fontSize: 13),
                         ),
                       ],
                     ),
@@ -73,9 +74,13 @@ class AccountPopUp extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return const ComplaintsPage();
+                  }));
                 },
-                child: const MenuButton(icon: Icons.feedback, text: "Complain"),
+                child:
+                    const MenuButton(icon: Icons.feedback, text: "Emergency"),
               ),
               Visibility(
                 visible: token['type'] == 'police',

@@ -26,6 +26,3 @@ class CustomDistanceCalculator {
     return calculatedDistanceKm * 1.91 / 1000;
   }
 }
-
-
-

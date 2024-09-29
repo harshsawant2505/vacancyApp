@@ -19,6 +19,7 @@ class _FirstScreenState extends State<FirstScreen> {
   final TextEditingController controller = TextEditingController();
   double currentLat = 0, currentLon = 0;
   bool isLoading = true;
+
   Future<void> checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -30,7 +31,7 @@ class _FirstScreenState extends State<FirstScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('session_token', jsonEncode(token));
     print("In the set session");
-   final temp =  setSession({"data":"the ses"});
+    final temp = setSession({"data": "the ses"});
     print(temp);
   }
 
@@ -46,12 +47,11 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   void getgetsession() async {
-   
     final s = await getSession();
- 
+
     token = json.decode(s ?? '{"data":"none"}');
     print(token);
-    
+
     // token = {"data":"user"};
   }
 
@@ -174,7 +174,7 @@ class _FirstScreenState extends State<FirstScreen> {
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.only(top: 20),
                 decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: Colors.grey[300],
                     borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(25),
                         topRight: Radius.circular(25))),

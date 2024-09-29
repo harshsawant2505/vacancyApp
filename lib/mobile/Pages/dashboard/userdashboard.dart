@@ -1,4 +1,3 @@
-
 import 'package:bits_hackathon/globalvariables.dart';
 import 'package:bits_hackathon/mobile/Pages/homepage/FirstScreen.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
-
 
   Future<void> clearSession() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -17,6 +15,7 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade300,
         title: const Text("User Dashboard"),
         centerTitle: true,
       ),
@@ -25,36 +24,53 @@ class Dashboard extends StatelessWidget {
         children: [
           ListView(
             shrinkWrap: true,
-            padding: const EdgeInsets.all(15),
-            children:[
-              Text(
-                token['name'],
-                style: TextStyle(fontSize: 25), 
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  token['name'],
+                  style: const TextStyle(fontSize: 28),
+                ),
               ),
-              Text(
-                token['type'],
-             
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  token['type'],
+                  style: const TextStyle(fontSize: 20),
+                ),
               ),
-              Text(token['email']), 
-               Text("Phone number: ${token['phNo']}"),
-
-               ElevatedButton(
-              onPressed: () {
-                  clearSession();
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                    return const FirstScreen();
-                  }));
-              },
-              child:  const Text(
-                "Logout",
-                style: TextStyle(color: Colors.red),
-             
-             
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  token['email'],
+                  style: const TextStyle(fontSize: 20),
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Phone number: ${token['phNo']}",
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: ElevatedButton(
+                  onPressed: () {
+                    clearSession();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const FirstScreen();
+                    }));
+                  },
+                  child: const Text(
+                    "Logout",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ),
             ],
           ),
-         
         ],
       ),
     );

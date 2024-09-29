@@ -1,3 +1,5 @@
+import 'package:bits_hackathon/mobile/Pages/homepage/FirstScreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,6 +32,14 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) {
+                return const FirstScreen();
+              }));
+            },
+            icon: const Icon(Icons.arrow_back)),
         backgroundColor: Colors.grey.shade300,
         centerTitle: true,
         title: const Text(
@@ -44,7 +54,7 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
               padding: EdgeInsets.all(8.0),
               child: Center(
                 child: Text(
-                  "Help lines numbers and options.",
+                  "Help lines numbers",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -71,7 +81,6 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
                 leading: const Icon(Icons.call),
                 title: const Text("Senior citizen helpline: 1090"),
                 onTap: () {
-                
                   _makePhoneCall('tel:1090');
                 },
               ),
@@ -176,7 +185,7 @@ class _ComplaintsPageState extends State<ComplaintsPage> {
                 tileColor: Colors.grey.shade300,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
-                leading: const Icon(Icons.web_asset_rounded),
+                leading: const Icon(CupertinoIcons.globe),
                 title: const Text(
                     "Goa-Police website: https://citizen.goapolice.gov.in/"),
                 onTap: () {

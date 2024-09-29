@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ConfirmButton extends StatelessWidget {
   final String text;
+
   const ConfirmButton({super.key, this.text = "Confirm"});
 
   @override

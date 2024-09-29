@@ -8,7 +8,9 @@ import 'package:bits_hackathon/mobile/Pages/homepage/FirstScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -26,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   final policeEmail = TextEditingController();
   final phNo = TextEditingController();
   bool isRegister = true;
+  Logger logger = Logger();
 
   bool isParking = false;
   bool isCitizen = true;
@@ -37,36 +40,32 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('session_token', jsonEncode(token));
     print("In the set session");
-  //  final temp =  setSession({"data":"the ses"});
-    // print(temp);
   }
 
-   Future<String?> getSession() async {
-    print("infffffffffffffffffffffffff");
+  Future<String?> getSession() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('session_token');
   }
 
-   void getgetsession() async {
-   
+  void getgetsession() async {
     final s = await getSession();
-   
- 
+
     token = json.decode(s ?? '{"data":"none"}');
     print('The Live Session: $token');
-    
+
     // token = {"data":"user"};
   }
 
-  void register(String nameText,String emailText, String passwordText, String phNo) async {
-      try{
+  void register(String nameText, String emailText, String passwordText,
+      String phNo) async {
+    try {
       final Map<String, dynamic> jsonData = {
         'name': nameText,
         'email': emailText,
         'password': passwordText,
         'phNo': phNo
       };
-        final res = await http.post(
+      final res = await http.post(
         Uri.parse("https://node-api-5kc9.onrender.com/register"),
         headers: {
           'Content-Type': 'application/json',
@@ -74,25 +73,26 @@ class _LoginPageState extends State<LoginPage> {
         body: json.encode(jsonData), // Encode the Map to JSON
       );
 
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         print(res.body);
 
-     
         final apiRes = json.decode(res.body);
         setSession(apiRes);
         getgetsession();
-  //set alert here
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return const FirstScreen();}));
+        //set alert here
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return const FirstScreen();
+        }));
       }
-
-      }catch(err){
-          print(err);
-
-      }
+    } catch (err) {
+      logger.e("ERROR: $err");
+    }
   }
 
-  void registerParking(String nameText,String emailText, String passwordText, String phNo, String onehrpay, String halfhrpay)async{
-     try{
+  void registerParking(String nameText, String emailText, String passwordText,
+      String phNo, String onehrpay, String halfhrpay) async {
+    try {
       final Map<String, dynamic> jsonData = {
         'name': nameText,
         'email': emailText,
@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
         'onehr': onehrpay,
         'halfhr': halfhrpay
       };
-        final res = await http.post(
+      final res = await http.post(
         Uri.parse("https://node-api-5kc9.onrender.com/registerParking"),
         headers: {
           'Content-Type': 'application/json',
@@ -109,27 +109,26 @@ class _LoginPageState extends State<LoginPage> {
         body: json.encode(jsonData), // Encode the Map to JSON
       );
 
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         print(res.body);
 
-     
         final apiRes = json.decode(res.body);
         setSession(apiRes);
         getgetsession();
-  //set alert here
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return const FirstScreen();}));
+        //set alert here
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return const FirstScreen();
+        }));
       }
-
-      }catch(err){
-          print(err);
-
-      }
+    } catch (err) {
+      print(err);
+    }
   }
 
-void registerPolice(String nameText, String emailText, String passwordText, String phNoText, String policeEmailText) async{
-
-
- try{
+  void registerPolice(String nameText, String emailText, String passwordText,
+      String phNoText, String policeEmailText) async {
+    try {
       final Map<String, dynamic> jsonData = {
         'name': nameText,
         'email': emailText,
@@ -137,7 +136,7 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
         'phNo': phNoText,
         'policeEmail': policeEmailText
       };
-        final res = await http.post(
+      final res = await http.post(
         Uri.parse("https://node-api-5kc9.onrender.com/registerPolice"),
         headers: {
           'Content-Type': 'application/json',
@@ -145,35 +144,29 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
         body: json.encode(jsonData), // Encode the Map to JSON
       );
 
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         print(res.body);
         final apiRes = json.decode(res.body);
         setSession(apiRes);
         getgetsession();
-  //set alert here
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return const FirstScreen();}));
+        //set alert here
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return const FirstScreen();
+        }));
       }
-
-      }catch(err){
-          print(err);
-
-      }
-  
-
-}
-
-
+    } catch (err) {
+      print(err);
+    }
+  }
 
   void login(String emailText, String passwordText) async {
-
-       try{
+    try {
       final Map<String, dynamic> jsonData = {
-        
         'email': emailText,
         'password': passwordText,
-     
       };
-        final res = await http.post(
+      final res = await http.post(
         Uri.parse("https://node-api-5kc9.onrender.com/login"),
         headers: {
           'Content-Type': 'application/json',
@@ -181,40 +174,41 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
         body: json.encode(jsonData), // Encode the Map to JSON
       );
 
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         print(res.body);
 
-     
         final apiRes = json.decode(res.body);
         setSession(apiRes);
         getgetsession();
-          Navigator.pushReplacement(context,
-                     MaterialPageRoute(builder: (context) {
-                      return const FirstScreen();
-           }));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return const FirstScreen();
+        }));
 
-           Fluttertoast.showToast(
-          
-          msg: "Logged in successfully",
-          timeInSecForIosWeb: 5,
-          backgroundColor: const Color.fromARGB(255, 112, 234, 116),
-          webBgColor: "green",
-          textColor: Colors.white);
-        
-
+        Fluttertoast.showToast(
+            msg: "Logged in successfully",
+            timeInSecForIosWeb: 5,
+            backgroundColor: const Color.fromARGB(255, 112, 234, 116),
+            webBgColor: "green",
+            textColor: Colors.white);
       }
-
-      }catch(err){
-          print(err);
-
-      }
+    } catch (err) {
+      print(err);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return const FirstScreen();}));}, icon: const Icon(Icons.arrow_back)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) {
+                return const FirstScreen();
+              }));
+            },
+            icon: const Icon(Icons.arrow_back)),
         title: Text(isRegister ? "Register" : "Login"),
         centerTitle: true,
       ),
@@ -222,58 +216,54 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-             GestureDetector(
+            GestureDetector(
               onTap: () {
                 setState(() {
-                  
-                 isParking = false;
-                 isCitizen = true;
-                 isPolice = false;
-                 userType = 'citizen';
+                  isParking = false;
+                  isCitizen = true;
+                  isPolice = false;
+                  userType = 'citizen';
                 });
               },
               child: const ConfirmButton(
                 text: "Citizen",
               ),
             ),
-             GestureDetector(
+            GestureDetector(
               onTap: () {
                 setState(() {
-                  
-                 isParking = false;
-                 isCitizen = false;
-                 isPolice = true;
-                 userType = 'police';
+                  isParking = false;
+                  isCitizen = false;
+                  isPolice = true;
+                  userType = 'police';
                 });
               },
               child: const ConfirmButton(
                 text: "Police",
               ),
             ),
-             GestureDetector(
+            GestureDetector(
               onTap: () {
                 setState(() {
-                  
-                 isParking = true;
-                 isCitizen = false;
-                 isPolice = false;
-                 userType = 'parking';
-                 print(userType);
+                  isParking = true;
+                  isCitizen = false;
+                  isPolice = false;
+                  userType = 'parking';
+                  print(userType);
                 });
               },
               child: const ConfirmButton(
                 text: "Parking",
               ),
             ),
-             Visibility(
+            Visibility(
               visible: isRegister,
-              child:     CustomTextField(
-              controller: name,
-              hint: "name",
-              icon: Icons.person_2_outlined,
+              child: CustomTextField(
+                controller: name,
+                hint: "name",
+                icon: Icons.person_2_outlined,
+              ),
             ),
-            ),
-        
             CustomTextField(
               controller: email,
               hint: "email",
@@ -293,7 +283,7 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
                 icon: Icons.car_crash_rounded,
               ),
             ),
-             Visibility(
+            Visibility(
               visible: isPolice,
               child: CustomTextField(
                 controller: policeEmail,
@@ -301,7 +291,7 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
                 icon: Icons.car_crash_rounded,
               ),
             ),
-             Visibility(
+            Visibility(
               visible: isParking,
               child: CustomTextField(
                 controller: onehr,
@@ -309,24 +299,25 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
                 icon: Icons.monetization_on_outlined,
               ),
             ),
-             Visibility(
+            Visibility(
               visible: isParking,
               child: CustomTextField(
                 controller: halfhr,
                 hint: "Payment Link for 10rs (30min)",
-               icon: Icons.monetization_on_outlined,
+                icon: Icons.monetization_on_outlined,
               ),
             ),
             GestureDetector(
               onTap: () {
                 if (isRegister) {
-                  if(isCitizen){
-
-                  register(name.text,email.text, password.text,phNo.text);
-                  }else if(isParking){
-                     registerParking(name.text,email.text, password.text,phNo.text, onehr.text, halfhr.text);
-                  }else if(isPolice){
-                    registerPolice(name.text, email.text, password.text,phNo.text, policeEmail.text);
+                  if (isCitizen) {
+                    register(name.text, email.text, password.text, phNo.text);
+                  } else if (isParking) {
+                    registerParking(name.text, email.text, password.text,
+                        phNo.text, onehr.text, halfhr.text);
+                  } else if (isPolice) {
+                    registerPolice(name.text, email.text, password.text,
+                        phNo.text, policeEmail.text);
                   }
                 } else {
                   login(email.text, password.text);
@@ -356,7 +347,6 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
                 ],
               ),
             ),
-            
           ],
         ),
       ),
