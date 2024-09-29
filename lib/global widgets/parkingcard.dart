@@ -7,26 +7,15 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ParkingCard extends StatefulWidget {
   final Map entry;
-  const ParkingCard({super.key, required this.entry});
+  final double dis;
+  const ParkingCard({super.key, required this.entry, required this.dis});
 
   @override
   State<ParkingCard> createState() => _ParkingCardState();
 }
 
 class _ParkingCardState extends State<ParkingCard> {
-  double dis = 0, lat = 0, lon = 0;
   Logger logger = Logger();
-  void getdis() async {
-    Position position = await Geolocator.getCurrentPosition(
-        locationSettings:
-            const LocationSettings(accuracy: LocationAccuracy.high));
-    dis = CustomDistanceCalculator()
-        .calculateDistance(position.latitude, position.longitude, lat, lon);
-    logger.d("Distance: $dis");
-    setState(() {
-      dis = dis;
-    });
-  }
 
   void goToMaps() async {
     final url =
@@ -43,9 +32,6 @@ class _ParkingCardState extends State<ParkingCard> {
 
   @override
   void initState() {
-    lat = double.tryParse(widget.entry['gps'].toString().split(' ').first) ?? 0;
-    lon = double.tryParse(widget.entry['gps'].toString().split(' ').last) ?? 0;
-    getdis();
     super.initState();
   }
 
@@ -58,7 +44,11 @@ class _ParkingCardState extends State<ParkingCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        final newplace = LatLng(lat, lon);
+        final newplace = LatLng(
+            double.tryParse(widget.entry['gps'].toString().split(' ').first) ??
+                0,
+            double.tryParse(widget.entry['gps'].toString().split(' ').last) ??
+                0);
         mapController.move(newplace, 20);
       },
       child: Container(
@@ -87,7 +77,7 @@ class _ParkingCardState extends State<ParkingCard> {
                       Row(
                         children: [
                           Text(
-                            "${dis.toStringAsFixed(2)} km",
+                            "${widget.dis.toStringAsFixed(2)} km",
                             style: const TextStyle(fontSize: 14),
                           ),
                           const Spacer(),

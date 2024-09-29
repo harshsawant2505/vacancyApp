@@ -17,6 +17,7 @@ class FirstScreen extends StatefulWidget {
 
 class _FirstScreenState extends State<FirstScreen> {
   final TextEditingController controller = TextEditingController();
+  double currentLat = 0, currentLon = 0;
   Future<void> checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -88,8 +89,8 @@ class _FirstScreenState extends State<FirstScreen> {
     Position position = await Geolocator.getCurrentPosition(
         locationSettings:
             const LocationSettings(accuracy: LocationAccuracy.high));
-    double currentLat = position.latitude;
-    double currentLon = position.longitude;
+    currentLat = position.latitude;
+    currentLon = position.longitude;
 
     for (var value in gpsList) {
       if (value[0].isEmpty) {
@@ -190,9 +191,25 @@ class _FirstScreenState extends State<FirstScreen> {
                         itemCount:
                             controller.text.isEmpty ? 10 : parkingSpots.length,
                         itemBuilder: (context, index) {
+                          double dis = CustomDistanceCalculator()
+                              .calculateDistance(
+                                  currentLat,
+                                  currentLon,
+                                  double.tryParse(
+                                          parkingSpots[index]['gps']
+                                              .toString()
+                                              .split(' ')
+                                              .first) ??
+                                      0,
+                                  double.tryParse(parkingSpots[index]['gps']
+                                          .toString()
+                                          .split(' ')
+                                          .last) ??
+                                      0);
                           print(parkingSpots[index]);
                           return ParkingCard(
                             entry: parkingSpots[index],
+                            dis: dis,
                           );
                         },
                       ),
