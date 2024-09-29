@@ -190,6 +190,7 @@ class _FirstScreenState extends State<FirstScreen> {
                         itemCount:
                             controller.text.isEmpty ? 10 : parkingSpots.length,
                         itemBuilder: (context, index) {
+                          print(parkingSpots[index]);
                           return ParkingCard(
                             entry: parkingSpots[index],
                           );

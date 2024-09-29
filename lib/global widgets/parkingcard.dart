@@ -29,7 +29,8 @@ class _ParkingCardState extends State<ParkingCard> {
   }
 
   void goToMaps() async {
-    final url = "https://www.google.com/maps?q=$lat,$lon";
+    final url =
+        "https://www.google.com/maps?q=${double.tryParse(widget.entry['gps'].toString().split(' ').first) ?? 0},${double.tryParse(widget.entry['gps'].toString().split(' ').last) ?? 0}";
 
     try {
       launchUrl(Uri.parse(url));
@@ -46,6 +47,11 @@ class _ParkingCardState extends State<ParkingCard> {
     lon = double.tryParse(widget.entry['gps'].toString().split(' ').last) ?? 0;
     getdis();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
