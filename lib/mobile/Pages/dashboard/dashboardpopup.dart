@@ -79,7 +79,6 @@ class AccountPopUp extends StatelessWidget {
               ),
               Visibility(
                 visible: true,
-                //TODO: to be replaced with the initState condition when connected to backend
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(context,
