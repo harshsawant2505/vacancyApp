@@ -49,7 +49,7 @@ class _FirstScreenState extends State<FirstScreen> {
   void getgetsession() async {
     final s = await getSession();
     token = json.decode(s ?? '{"data":"none"}');
-    // token = {"data":"user"};
+    token = {"data": "police"};
   }
 
   List<List<String>> gpsList = [];
@@ -68,9 +68,7 @@ class _FirstScreenState extends State<FirstScreen> {
           String gpsString = spot['gps']; 
           List<String> splitGps =
               gpsString.split(' '); // Split the string by comma
-          return splitGps
-              .map((val) => (val))
-              .toList();
+          return splitGps.map((val) => (val)).toList();
         }).toList();
 
         //final List
@@ -146,11 +144,11 @@ class _FirstScreenState extends State<FirstScreen> {
 
   @override
   void initState() {
-    super.initState();
     getgetsession();
     checkLocationPermission();
     getAllData();
     _getCurrentLocationAndSortCoordinates();
+    super.initState();
   }
 
   @override
@@ -192,6 +190,11 @@ class _FirstScreenState extends State<FirstScreen> {
                         itemCount:
                             controller.text.isEmpty ? 10 : parkingSpots.length,
                         itemBuilder: (context, index) {
+                          if (index > 0 &&
+                              parkingSpots[index]['place'] ==
+                                  parkingSpots[index - 1]['place']) {
+                            return Container();
+                          }
                           return ParkingCard(
                             entry: parkingSpots[index],
                           );
