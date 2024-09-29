@@ -191,9 +191,7 @@ class _FirstScreenState extends State<FirstScreen> {
               ),
             ),
             MainSearchBar(
-              controller: controller,
-              func: getAllData,
-              func2: cleanSlate,
+              controller: controller, func: getAllData, func2: cleanSlate,
             ),
             Align(
               alignment: Alignment.bottomCenter,

@@ -29,7 +29,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       if (res.statusCode == 200) {
         List<dynamic> listOfMaps = json.decode(res.body);
         List<Map<String, dynamic>> castedList =
-            List<Map<String, dynamic>>.from(listOfMaps);
+        List<Map<String, dynamic>>.from(listOfMaps);
 
         gpsList.clear();
         gpsList.addAll(castedList);
@@ -57,43 +57,66 @@ class _AdminDashboardState extends State<AdminDashboard> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: Container(
-          padding: const EdgeInsets.all(5),
-          height: MediaQuery.of(context).size.height - 20,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DropdownMenu(
-                dropdownMenuEntries: const [
-                  DropdownMenuEntry(value: 'panaji', label: "Panaji"),
-                  DropdownMenuEntry(value: 'porvorim', label: "Porvorim"),
-                  DropdownMenuEntry(value: 'vasco', label: "Vasco"),
-                  DropdownMenuEntry(value: 'bicholim', label: "Bicholim"),
-                  DropdownMenuEntry(value: 'calangute', label: "Calangute"),
-                  DropdownMenuEntry(value: 'mopa', label: "Mopa"),
-                  DropdownMenuEntry(value: 'Anjuna', label: "Anjuna"),
-                  DropdownMenuEntry(value: 'mapusa', label: "Mapusa"),
-                  DropdownMenuEntry(value: 'quepem', label: "Quepem"),
-                  DropdownMenuEntry(value: 'canacona', label: "Canacona"),
-                  DropdownMenuEntry(value: 'colva', label: "Colva"),
-                  DropdownMenuEntry(value: 'curchorem', label: "Curchorem"),
-                ],
-                onSelected: (value) {
-                  setState(() {
-                    String lol = value!;
-                    getData(lol);
-                  });
-                },
-                hintText: "Location",
-                width: MediaQuery.of(context).size.width - 20,
-                controller: controller,
-              ),
-              Visibility(
-                  visible: gpsList.isNotEmpty,
-                  child: Graph(
-                    gpsList: gpsList,
-                  )),
-            ],
+        child: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DropdownMenu(
+                  dropdownMenuEntries: const [
+                    DropdownMenuEntry(value: 'panaji', label: "Panaji"),
+                    DropdownMenuEntry(value: 'porvorim', label: "Porvorim"),
+                    DropdownMenuEntry(value: 'vasco', label: "Vasco"),
+                    DropdownMenuEntry(value: 'bicholim', label: "Bicholim"),
+                    DropdownMenuEntry(value: 'calangute', label: "Calangute"),
+                    DropdownMenuEntry(value: 'mopa', label: "Mopa"),
+                    DropdownMenuEntry(value: 'Anjuna', label: "Anjuna"),
+                    DropdownMenuEntry(value: 'mapusa', label: "Mapusa"),
+                    DropdownMenuEntry(value: 'quepem', label: "Quepem"),
+                    DropdownMenuEntry(value: 'canacona', label: "Canacona"),
+                    DropdownMenuEntry(value: 'colva', label: "Colva"),
+                    DropdownMenuEntry(value: 'curchorem', label: "Curchorem"),
+                  ],
+                  onSelected: (value) {
+                    setState(() {
+                      String lol = value!;
+                      getData(lol);
+                    });
+                  },
+                  hintText: "Location",
+                  width: MediaQuery.of(context).size.width - 20,
+                  controller: controller,
+                ),
+                Visibility(
+                    visible: gpsList.isNotEmpty,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          "4 wheelers",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Graph(
+                          gpsList: gpsList,
+                          type: '4w',
+                          occtype: '4w_occ',
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          "2 wheelers",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Graph(
+                          gpsList: gpsList,
+                          type: '2w',
+                          occtype: '2w_occ',
+                        ),
+                      ],
+                    )),
+              ],
+            ),
           ),
         ),
       ),
@@ -103,7 +126,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
 class Graph extends StatefulWidget {
   final List<Map> gpsList;
-  const Graph({super.key, required this.gpsList});
+  final String type, occtype;
+  const Graph(
+      {super.key,
+        required this.gpsList,
+        required this.type,
+        required this.occtype});
 
   @override
   State<Graph> createState() => _GraphState();
@@ -118,20 +146,23 @@ class _GraphState extends State<Graph> {
         elevation: 5,
         borderRadius: BorderRadius.circular(8),
         child: Container(
+          padding: const EdgeInsets.only(bottom: 3),
           width: MediaQuery.of(context).size.width - 16,
-          height: MediaQuery.of(context).size.height -
-              MediaQuery.of(context).size.width -
-              25,
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height -
+                MediaQuery.of(context).size.width -
+                35,
+          ),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
           child: ListView.builder(
               shrinkWrap: true,
               itemCount: widget.gpsList.length,
               itemBuilder: (context, index) {
-                double percent = (widget.gpsList[index]['4w'] -
-                                widget.gpsList[index]['4w_occ']) /
-                            widget.gpsList[index]['4w'] !=
-                        0
-                    ? widget.gpsList[index]['4w']
+                double percent = (widget.gpsList[index][widget.type] -
+                    widget.gpsList[index][widget.occtype]) /
+                    widget.gpsList[index][widget.type] !=
+                    0
+                    ? widget.gpsList[index][widget.type]
                     : 1;
                 if (percent > 1.00) {
                   percent = 1.00;
@@ -187,15 +218,15 @@ class _GraphBarState extends State<GraphBar> {
                     width: widget.percent == 0
                         ? 5
                         : (widget.percent * MediaQuery.of(context).size.width) -
-                            43,
+                        43,
                     height: 20,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(3),
                       color: widget.percent >= 0.50
                           ? Colors.green
                           : widget.percent >= 0.25
-                              ? Colors.orange
-                              : Colors.red,
+                          ? Colors.orange
+                          : Colors.red,
                     ),
                   ),
                 ),

@@ -73,7 +73,7 @@ class _MainSearchBarState extends State<MainSearchBar> {
                     isLoading = true;
                     widget.func2();
                     await getData(value);
-                    isLoading=false;
+                    isLoading = false;
                     setState(() {
                       parkingSpots = parkingSpots;
                       print(parkingSpots);
@@ -161,7 +161,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.only(left: 12, right: 12, top: 20),
       child: Material(
-        color: Colors.grey.shade200,
         elevation: 5,
         borderRadius: BorderRadius.circular(15),
         child: TextField(

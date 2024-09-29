@@ -1,16 +1,37 @@
-# bits_hackathon
+Team Name: The Last 4 brain cells.
+Team Leader: Vedant Joshi
+Team members:
 
-A new Flutter project.
+1. Anirudha Joshi
+2. Kedron Lucas
+3. Harsh Samant
 
-## Getting Started
+Description:
+A Flutter-based application for managing parking spaces, providing users with real-time information
+on available spots and navigating them to locations using map markers.
 
-This project is a starting point for a Flutter application.
+Main Features:
+Display available parking spaces in real-time.
+Provide navigation to the selected parking spot.
+Show the user’s current location on the map.
 
-A few resources to get you started if this is your first Flutter project:
+Usage:
+Assuming you have flutter sdk.
+Using command prompt CD to vacancy App, then put "flutter run --release" command and hit enter. Chose the relevant platform.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Technologies Used:
+programming languages: dart, python, javaScript.
+technologies used: Flutter, express.js, node.js, flask, OpenCv, MongDb, NumPy, Pandas,
+external packages used:   cupertino_icons, latlong2, fluttertoast, geolocator, logger, http,
+flutter_map open_route_service, url_launcher, shared_preferences, flutter_email_sender.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+License: None. 
+
+Contribution Guidelines: None, Closed Repository.
+
+Credits:
+ChatGpt, StackOverFlow, Microsoft Copilot.
+
+Contact: 
+Email: jvedant578@gmail.com
+Phone No: 9326313003
