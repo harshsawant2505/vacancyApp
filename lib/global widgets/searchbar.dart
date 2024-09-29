@@ -73,13 +73,12 @@ class _MainSearchBarState extends State<MainSearchBar> {
                     isLoading = true;
                     widget.func2();
                     await getData(value);
-                    parkingSpots.forEach((map) {
-                      isLoading = false;
-                    });
+                    isLoading=false;
                     setState(() {
                       parkingSpots = parkingSpots;
                       print(parkingSpots);
                     });
+                    setState(() {});
                   }
                 },
                 onChanged: (value) {
