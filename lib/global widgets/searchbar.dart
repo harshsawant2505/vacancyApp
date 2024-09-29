@@ -18,7 +18,7 @@ class MainSearchBar extends StatefulWidget {
 
 class _MainSearchBarState extends State<MainSearchBar> {
   void getData(String name) async {
-    const url = "http://localhost:3001/parkingdetails";
+    const url = "https://node-api-5kc9.onrender.com/parkingdetails";
     final Map<String, dynamic> jsonData = {
       'city': name,
     };
@@ -33,7 +33,6 @@ class _MainSearchBarState extends State<MainSearchBar> {
       );
 
       if (res.statusCode == 200) {
-        
         List<dynamic> listOfMaps = json.decode(res.body);
         List<Map<String, dynamic>> castedList =
             List<Map<String, dynamic>>.from(listOfMaps);
@@ -51,8 +50,7 @@ class _MainSearchBarState extends State<MainSearchBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: 12, vertical: MediaQuery.of(context).size.height / 70),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
       child: Material(
         elevation: 5,
         borderRadius: BorderRadius.circular(200),

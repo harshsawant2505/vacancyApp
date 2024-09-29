@@ -96,8 +96,10 @@
 
 import 'dart:async';
 import 'dart:ui';
+import 'package:bits_hackathon/globalvariables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'package:geolocator/geolocator.dart';
@@ -158,70 +160,67 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  final MapController mapController = MapController();
+  // void _handleTap(LatLng latLng) {
+  //   if (userLocationSet) {
+  //     setState(() {
+  //       if (markers.length < 2) {
+  //         markers.add(
+  //           Marker(
+  //             point: latLng,
+  //             width: 80,
+  //             height: 80,
+  //             child: IconButton(
+  //               onPressed: () {},
+  //               icon: const Icon(Icons.location_on),
+  //               color: Colors.red,
+  //               iconSize: 45,
+  //             ),
+  //           ),
+  //         );
+  //       }
 
-  // Function to handle the second tap
-  void _handleTap(LatLng latLng) {
-    if (userLocationSet) {
-      setState(() {
-        if (markers.length < 2) {
-          markers.add(
-            Marker(
-              point: latLng,
-              width: 80,
-              height: 80,
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.location_on),
-                color: Colors.red,
-                iconSize: 45,
-              ),
-            ),
-          );
-        }
+  //       if (markers.length == 2) {
+  //         // Add a slight delay before showing the process effect
+  //         Future.delayed(const Duration(milliseconds: 500), () {
+  //           setState(() {
+  //             isLoading = true;
+  //           });
+  //         });
 
-        if (markers.length == 2) {
-          // Add a slight delay before showing the process effect
-          Future.delayed(const Duration(milliseconds: 500), () {
-            setState(() {
-              isLoading = true;
-            });
-          });
+  //         getCoordinates(markers[0].point, markers[1].point);
 
-          getCoordinates(markers[0].point, markers[1].point);
+  //         // Calculate the distance between the two points in kilometers
+  //         final double calculatedDistanceKm = distance.as(
+  //           LengthUnit.Kilometer,
+  //           markers[0].point,
+  //           markers[1].point,
+  //         );
 
-          // Calculate the distance between the two points in kilometers
-          final double calculatedDistanceKm = distance.as(
-            LengthUnit.Kilometer,
-            markers[0].point,
-            markers[1].point,
-          );
+  //         if (calculatedDistanceKm < 1) {
+  //           // If the distance is less than 1 kilometer, show it in meters
+  //           final double calculatedDistanceMeters = distance.as(
+  //             LengthUnit.Meter,
+  //             markers[0].point,
+  //             markers[1].point,
+  //           );
+  //           print(
+  //               "Distance: ${calculatedDistanceMeters.toStringAsFixed(2)} meters");
+  //         } else {
+  //           // Otherwise, show the distance in kilometers
+  //           print("Distance: ${calculatedDistanceKm.toStringAsFixed(2)} km");
+  //         }
 
-          if (calculatedDistanceKm < 1) {
-            // If the distance is less than 1 kilometer, show it in meters
-            final double calculatedDistanceMeters = distance.as(
-              LengthUnit.Meter,
-              markers[0].point,
-              markers[1].point,
-            );
-            print(
-                "Distance: ${calculatedDistanceMeters.toStringAsFixed(2)} meters");
-          } else {
-            // Otherwise, show the distance in kilometers
-            print("Distance: ${calculatedDistanceKm.toStringAsFixed(2)} km");
-          }
-
-          // Calculate the bounds that contain the two marked points
-          LatLngBounds bounds = LatLngBounds.fromPoints(
-              markers.map((marker) => marker.point).toList());
-          // Perform a zoom out so that the bounds fit the screen
-          mapController.fitBounds(bounds);
-        }
-      });
-    } else {
-      print("User location is not set yet.");
-    }
-  }
+  //         // Calculate the bounds that contain the two marked points
+  //         LatLngBounds bounds = LatLngBounds.fromPoints(
+  //             markers.map((marker) => marker.point).toList());
+  //         // Perform a zoom out so that the bounds fit the screen
+  //         mapController.fitBounds(bounds);
+  //       }
+  //     });
+  //   } else {
+  //     print("User location is not set yet.");
+  //   }
+  // }
 
   // Function to get the user's current location
   Future<void> _determinePosition() async {
@@ -282,7 +281,7 @@ class _MapScreenState extends State<MapScreen> {
             options: MapOptions(
               initialZoom: 16,
               initialCenter: myPoint,
-              onTap: (tapPosition, latLng) => _handleTap(latLng),
+              // onTap: (tapPosition, latLng) => _handleTap(latLng),
             ),
             children: [
               TileLayer(
@@ -292,6 +291,7 @@ class _MapScreenState extends State<MapScreen> {
               MarkerLayer(
                 markers: markers,
               ),
+              
               PolylineLayer(
                 polylineCulling: false,
                 polylines: [
