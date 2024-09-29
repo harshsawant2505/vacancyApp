@@ -5,7 +5,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-List<Map> parkingSpots = [];
+List<Map> parkingSpots = [],closets=[];
+bool isLoading = true;
+
 Map<String, dynamic> token = {};
 final MapController mapController = MapController();
 
