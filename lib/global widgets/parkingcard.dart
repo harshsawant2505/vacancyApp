@@ -111,7 +111,7 @@ class _ParkingCardState extends State<ParkingCard> {
                                         : Colors.green,
                               ),
                               Text(
-                                "${widget.entry['4w'].toString() == "null" ? '0' : widget.entry['4w']}",
+                                "${widget.entry['4w'].toString() == "null" ? '0' : widget.entry['4w'] - widget.entry['4w_occ']}",
                                 style: TextStyle(
                                     fontSize: 14,
                                     color: (widget.entry['4w'].toString() ==
@@ -134,7 +134,7 @@ class _ParkingCardState extends State<ParkingCard> {
                                         : Colors.green,
                               ),
                               Text(
-                                "${widget.entry['2w'].toString() == "null" ? '0' : widget.entry['2w']}",
+                                "${widget.entry['2w'].toString() == "null" ? '0' : widget.entry['2w'] - widget.entry['2w_occ']}",
                                 style: TextStyle(
                                     fontSize: 14,
                                     color: (widget.entry['2w'].toString() ==
