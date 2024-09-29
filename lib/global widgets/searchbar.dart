@@ -7,17 +7,20 @@ import 'package:flutter/material.dart';
 
 class MainSearchBar extends StatefulWidget {
   final TextEditingController controller;
-  final VoidCallback func;
+  final VoidCallback func, func2;
 
   const MainSearchBar(
-      {super.key, required this.controller, required this.func});
+      {super.key,
+      required this.controller,
+      required this.func,
+      required this.func2});
 
   @override
   State<MainSearchBar> createState() => _MainSearchBarState();
 }
 
 class _MainSearchBarState extends State<MainSearchBar> {
-  void getData(String name) async {
+  Future<void> getData(String name) async {
     const url = "https://node-api-5kc9.onrender.com/parkingdetails";
     final Map<String, dynamic> jsonData = {
       'city': name,
@@ -38,8 +41,11 @@ class _MainSearchBarState extends State<MainSearchBar> {
             List<Map<String, dynamic>>.from(listOfMaps);
 
         parkingSpots.clear();
-        parkingSpots.addAll(castedList);
-        widget.func();
+        print("got searched data");
+        setState(() {
+          isLoading = false;
+          parkingSpots.addAll(castedList);
+        });
       }
     } catch (e) {
       logger.e(e.toString());
@@ -61,13 +67,24 @@ class _MainSearchBarState extends State<MainSearchBar> {
                 controller: widget.controller,
                 cursorColor: Colors.black,
                 cursorWidth: 1,
-                onSubmitted: (value) {
+                onSubmitted: (value) async {
                   if (value.isNotEmpty) {
-                    getData(value.toLowerCase());
+                    print('getting searched data');
+                    isLoading = true;
+                    widget.func2();
+                    await getData(value);
+                    parkingSpots.forEach((map) {
+                      isLoading = false;
+                    });
+                    setState(() {
+                      parkingSpots = parkingSpots;
+                      print(parkingSpots);
+                    });
                   }
                 },
                 onChanged: (value) {
                   if (value.isEmpty) {
+                    print('getting all data from search');
                     widget.func();
                     setState(() {});
                   }

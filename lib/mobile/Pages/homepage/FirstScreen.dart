@@ -18,7 +18,14 @@ class FirstScreen extends StatefulWidget {
 class _FirstScreenState extends State<FirstScreen> {
   final TextEditingController controller = TextEditingController();
   double currentLat = 0, currentLon = 0;
-  bool isLoading = true;
+
+  void cleanSlate() {
+    setState(() {
+      isLoading = true;
+      parkingSpots.clear();
+    });
+  }
+
   Future<void> checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -30,7 +37,7 @@ class _FirstScreenState extends State<FirstScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('session_token', jsonEncode(token));
     print("In the set session");
-   final temp =  setSession({"data":"the ses"});
+    final temp = setSession({"data": "the ses"});
     print(temp);
   }
 
@@ -46,12 +53,11 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   void getgetsession() async {
-   
     final s = await getSession();
- 
-    token = json.decode(s ?? '{"data":"none"}');
+
+    token = json.decode(s ?? '{"type":"none"}');
     print(token);
-    
+
     // token = {"data":"user"};
   }
 
@@ -59,7 +65,15 @@ class _FirstScreenState extends State<FirstScreen> {
 
   Future<void> getAllData() async {
     const url = "https://node-api-5kc9.onrender.com/allparkingdetails";
+    parkingSpots.clear();
+    print('getting all data');
 
+    if (closets.isNotEmpty) {
+      setState(() {
+        parkingSpots = closets;
+      });
+      return;
+    }
     try {
       isLoading = true;
       final res = await h.get(Uri.parse(url));
@@ -75,23 +89,30 @@ class _FirstScreenState extends State<FirstScreen> {
           return splitGps.map((val) => (val)).toList();
         }).toList();
 
-        setState(() {
-          parkingSpots = parkingSpots;
-          isLoading = false;
-        });
+        for (var value in data) {
+          parkingSpots.add(value);
+        }
+        setState(() {});
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e.toString());
+    }
+    await _getCurrentLocationAndSortCoordinates();
   }
 
   List<List<dynamic>> sortedCoordinates = [];
 
   Future<void> _getCurrentLocationAndSortCoordinates() async {
     // Get the current location
-    Position position = await Geolocator.getCurrentPosition(
-        locationSettings:
-            const LocationSettings(accuracy: LocationAccuracy.high));
-    currentLat = position.latitude;
-    currentLon = position.longitude;
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          locationSettings:
+              const LocationSettings(accuracy: LocationAccuracy.high));
+      currentLat = position.latitude;
+      currentLon = position.longitude;
+    } catch (e) {
+      print(e.toString());
+    }
 
     for (var value in gpsList) {
       if (value[0].isEmpty) {
@@ -112,6 +133,7 @@ class _FirstScreenState extends State<FirstScreen> {
         .map((coords) => [coords[0], coords[1], coords[2]])
         .toList();
     parkingSpots.clear();
+    setState(() {});
 
     for (int i = 0; i < 10 && i < sortedCoordinates.length; i++) {
       final lat = sortedCoordinates[i][0];
@@ -131,10 +153,14 @@ class _FirstScreenState extends State<FirstScreen> {
           final Map something = json.decode(res.body);
           parkingSpots.add(something);
         }
-      } catch (e) {}
+      } catch (e) {
+        print(e.toString());
+      }
     }
     setState(() {
       parkingSpots = parkingSpots;
+      closets = parkingSpots;
+      isLoading = false;
     });
   }
 
@@ -143,8 +169,9 @@ class _FirstScreenState extends State<FirstScreen> {
     print("Init hit");
     getgetsession();
     checkLocationPermission();
-    getAllData();
-    _getCurrentLocationAndSortCoordinates();
+    if (controller.text.isEmpty) {
+      getAllData();
+    }
     super.initState();
   }
 
@@ -166,6 +193,7 @@ class _FirstScreenState extends State<FirstScreen> {
             MainSearchBar(
               controller: controller,
               func: getAllData,
+              func2: cleanSlate,
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -187,7 +215,9 @@ class _FirstScreenState extends State<FirstScreen> {
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         itemCount:
-                            controller.text.isEmpty ? 10 : parkingSpots.length,
+                            controller.text.isEmpty && parkingSpots.isEmpty
+                                ? 10
+                                : parkingSpots.length,
                         itemBuilder: (context, index) {
                           double dis = CustomDistanceCalculator()
                               .calculateDistance(
@@ -204,7 +234,6 @@ class _FirstScreenState extends State<FirstScreen> {
                                           .split(' ')
                                           .last) ??
                                       0);
-                          print(parkingSpots[index]);
                           return ParkingCard(
                             entry: parkingSpots[index],
                             dis: dis,
