@@ -42,7 +42,6 @@ class _ParkingCardState extends State<ParkingCard> {
 
   @override
   void initState() {
-    print('entered');
     lat = double.tryParse(widget.entry['gps'].toString().split(' ').first) ?? 0;
     lon = double.tryParse(widget.entry['gps'].toString().split(' ').last) ?? 0;
     getdis();
