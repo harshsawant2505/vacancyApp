@@ -89,7 +89,7 @@ class _ParkingCardState extends State<ParkingCard> {
                                       style: TextStyle(color: Colors.green),
                                     )
                                   : Container(
-                                      child: widget.entry.containsKey('upiurl')
+                                      child: widget.entry['upiurl'] != ""
                                           ? GestureDetector(
                                               onTap: () {
                                                 try {
