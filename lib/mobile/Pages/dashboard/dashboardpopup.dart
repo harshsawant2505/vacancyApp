@@ -1,4 +1,5 @@
 import 'package:bits_hackathon/globalvariables.dart';
+import 'package:bits_hackathon/mobile/Pages/complaints%20pages/complaints.dart';
 import 'package:bits_hackathon/mobile/Pages/dashboard/adminDashboard.dart';
 import 'package:bits_hackathon/mobile/Pages/dashboard/userdashboard.dart';
 import 'package:bits_hackathon/mobile/Pages/loginpage.dart';
@@ -10,7 +11,7 @@ class AccountPopUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.45,
+      heightFactor: 0.55,
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -74,14 +75,17 @@ class AccountPopUp extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const ComplaintsPage();
+                  }));
                 },
                 child: const MenuButton(icon: Icons.feedback, text: "Complain"),
               ),
               Visibility(
-                visible: true,
-                //TODO: to be replaced with the initState condition when connected to backend
+                visible: token['data'] == 'police',
                 child: GestureDetector(
                   onTap: () {
+                    Navigator.pop(context);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return const AdminDashboard();
