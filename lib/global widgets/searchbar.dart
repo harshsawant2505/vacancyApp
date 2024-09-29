@@ -42,7 +42,7 @@ class _MainSearchBarState extends State<MainSearchBar> {
         widget.func();
       }
     } catch (e) {
-     logger.e(e.toString());
+      logger.e(e.toString());
     }
   }
 
@@ -62,7 +62,7 @@ class _MainSearchBarState extends State<MainSearchBar> {
                 cursorColor: Colors.black,
                 cursorWidth: 1,
                 onSubmitted: (value) {
-                  getData(value);
+                  getData(value.toLowerCase());
                 },
                 decoration: const InputDecoration(
                     prefixIcon: Icon(
