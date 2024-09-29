@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as h;
 
 List<Map> gpsList = [];
@@ -59,7 +58,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: SizedBox(
+        child: Container(
+          padding: const EdgeInsets.all(5),
           height: MediaQuery.of(context).size.height - 20,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,12 +81,17 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 ],
                 onSelected: (value) {
                   getData(value ?? "panaji");
+                  setState(() {
+                    gpsList = gpsList;
+                  });
                 },
                 hintText: "Location",
                 width: MediaQuery.of(context).size.width - 20,
                 controller: controller,
               ),
-              Graph(),
+              Visibility(
+                  visible: controller.text.toString().isNotEmpty,
+                  child: const Graph()),
             ],
           ),
         ),
@@ -120,9 +125,9 @@ class _GraphState extends State<Graph> {
               shrinkWrap: true,
               itemCount: gpsList.length,
               itemBuilder: (context, index) {
-                double percent = gpsList[index]['4w'] -
-                    gpsList[index]['4w_occ'] / gpsList[index]['4w'];
-                percent = 0.5;
+                double percent =
+                    (gpsList[index]['4w'] - gpsList[index]['4w_occ']) /
+                        gpsList[index]['4w'];
                 return GraphBar(
                   entry: gpsList[index],
                   percent: percent,
@@ -165,17 +170,26 @@ class _GraphBarState extends State<GraphBar> {
             // width: MediaQuery.of(context).size.width - 30,
             decoration: BoxDecoration(
                 color: Colors.grey, borderRadius: BorderRadius.circular(6)),
-            child: Container(
-              width: (widget.percent * MediaQuery.of(context).size.width) - 30,
-              height: 20,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3),
-                color: widget.percent >= 0.50
-                    ? Colors.green
-                    : widget.percent >= 0.25
-                        ? Colors.orange
-                        : Colors.red,
-              ),
+            child: Row(
+              children: [
+                Container(
+                  width:
+                      (widget.percent * MediaQuery.of(context).size.width) - 43,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
+                    color: widget.percent >= 0.50
+                        ? Colors.green
+                        : widget.percent >= 0.25
+                            ? Colors.orange
+                            : Colors.red,
+                  ),
+                  child: Text(
+                    "${(widget.percent * 100).toStringAsFixed(0)}%",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
