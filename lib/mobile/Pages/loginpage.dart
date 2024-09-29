@@ -21,7 +21,17 @@ class _LoginPageState extends State<LoginPage> {
   final numberplate = TextEditingController();
   final password = TextEditingController();
   final name = TextEditingController();
+  final onehr = TextEditingController();
+  final halfhr = TextEditingController();
+  final policeEmail = TextEditingController();
+  final phNo = TextEditingController();
   bool isRegister = true;
+
+  bool isParking = false;
+  bool isCitizen = true;
+  bool isPolice = false;
+
+  String userType = 'citizen';
 
   Future<void> setSession(Map<String, dynamic> token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -57,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
         'phNo': phNo
       };
         final res = await http.post(
-        Uri.parse("https://node-api-5kc9.onrender.com/register"),
+        Uri.parse("http://localhost:3000/register"),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -81,6 +91,77 @@ class _LoginPageState extends State<LoginPage> {
       }
   }
 
+  void registerParking(String nameText,String emailText, String passwordText, String phNo, String onehrpay, String halfhrpay)async{
+     try{
+      final Map<String, dynamic> jsonData = {
+        'name': nameText,
+        'email': emailText,
+        'password': passwordText,
+        'phNo': phNo,
+        'onehr': onehrpay,
+        'halfhr': halfhrpay
+      };
+        final res = await http.post(
+        Uri.parse("http://localhost:3000/registerParking"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(jsonData), // Encode the Map to JSON
+      );
+
+      if(res.statusCode == 200){
+        print(res.body);
+
+     
+        final apiRes = json.decode(res.body);
+        setSession(apiRes);
+        getgetsession();
+  //set alert here
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return const FirstScreen();}));
+      }
+
+      }catch(err){
+          print(err);
+
+      }
+  }
+
+void registerPolice(String nameText, String emailText, String passwordText, String phNoText, String policeEmailText) async{
+
+
+ try{
+      final Map<String, dynamic> jsonData = {
+        'name': nameText,
+        'email': emailText,
+        'password': passwordText,
+        'phNo': phNoText,
+        'policeEmail': policeEmailText
+      };
+        final res = await http.post(
+        Uri.parse("http://localhost:3000/registerPolice"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(jsonData), // Encode the Map to JSON
+      );
+
+      if(res.statusCode == 200){
+        print(res.body);
+        final apiRes = json.decode(res.body);
+        setSession(apiRes);
+        getgetsession();
+  //set alert here
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return const FirstScreen();}));
+      }
+
+      }catch(err){
+          print(err);
+
+      }
+  
+
+}
+
 
 
   void login(String emailText, String passwordText) async {
@@ -93,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
      
       };
         final res = await http.post(
-        Uri.parse("https://node-api-5kc9.onrender.com/login"),
+        Uri.parse("http://localhost:3000/login"),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -137,70 +218,147 @@ class _LoginPageState extends State<LoginPage> {
         title: Text(isRegister ? "Register" : "Login"),
         centerTitle: true,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-           Visibility(
-            visible: isRegister,
-            child:     CustomTextField(
-            controller: name,
-            hint: "name",
-            icon: Icons.person_2_outlined,
-          ),
-          ),
-      
-          CustomTextField(
-            controller: email,
-            hint: "email",
-            icon: Icons.email,
-          ),
-          CustomTextField(
-            controller: password,
-            hint: "Password",
-            icon: Icons.password,
-            ispassword: true,
-          ),
-          Visibility(
-            visible: isRegister,
-            child: CustomTextField(
-              controller: numberplate,
-              hint: "Number Plate (optional)",
-              icon: Icons.car_crash_rounded,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+             GestureDetector(
+              onTap: () {
+                setState(() {
+                  
+                 isParking = false;
+                 isCitizen = true;
+                 isPolice = false;
+                 userType = 'citizen';
+                });
+              },
+              child: const ConfirmButton(
+                text: "Citizen",
+              ),
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              if (isRegister) {
-                register(name.text,email.text, password.text, numberplate.text);
-              } else {
-                login(email.text, password.text);
-              }
-            },
-            child: ConfirmButton(
-              text: isRegister ? "Register" : "Login",
+             GestureDetector(
+              onTap: () {
+                setState(() {
+                  
+                 isParking = false;
+                 isCitizen = false;
+                 isPolice = true;
+                 userType = 'police';
+                });
+              },
+              child: const ConfirmButton(
+                text: "Police",
+              ),
             ),
-          ),
-          Visibility(
-            visible: isRegister,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Already have an account? "),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isRegister = false;
-                    });
-                  },
-                  child: const Text(
-                    "Login",
-                    style: TextStyle(color: Colors.blue),
+             GestureDetector(
+              onTap: () {
+                setState(() {
+                  
+                 isParking = true;
+                 isCitizen = false;
+                 isPolice = false;
+                 userType = 'parking';
+                 print(userType);
+                });
+              },
+              child: const ConfirmButton(
+                text: "Parking",
+              ),
+            ),
+             Visibility(
+              visible: isRegister,
+              child:     CustomTextField(
+              controller: name,
+              hint: "name",
+              icon: Icons.person_2_outlined,
+            ),
+            ),
+        
+            CustomTextField(
+              controller: email,
+              hint: "email",
+              icon: Icons.email,
+            ),
+            CustomTextField(
+              controller: password,
+              hint: "Password",
+              icon: Icons.password,
+              ispassword: true,
+            ),
+            Visibility(
+              visible: isRegister,
+              child: CustomTextField(
+                controller: phNo,
+                hint: "Number Plate (optional)",
+                icon: Icons.car_crash_rounded,
+              ),
+            ),
+             Visibility(
+              visible: isPolice,
+              child: CustomTextField(
+                controller: policeEmail,
+                hint: "Police official Email id",
+                icon: Icons.car_crash_rounded,
+              ),
+            ),
+             Visibility(
+              visible: isParking,
+              child: CustomTextField(
+                controller: onehr,
+                hint: "Payment Link for 20rs (1hr)",
+                icon: Icons.monetization_on_outlined,
+              ),
+            ),
+             Visibility(
+              visible: isParking,
+              child: CustomTextField(
+                controller: halfhr,
+                hint: "Payment Link for 10rs (30min)",
+               icon: Icons.monetization_on_outlined,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                if (isRegister) {
+                  if(isCitizen){
+
+                  register(name.text,email.text, password.text,phNo.text);
+                  }else if(isParking){
+                     registerParking(name.text,email.text, password.text,phNo.text, onehr.text, halfhr.text);
+                  }else if(isPolice){
+                    registerPolice(name.text, email.text, password.text,phNo.text, policeEmail.text);
+                  }
+                } else {
+                  login(email.text, password.text);
+                }
+              },
+              child: ConfirmButton(
+                text: isRegister ? "Register" : "Login",
+              ),
+            ),
+            Visibility(
+              visible: isRegister,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Already have an account? "),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isRegister = false;
+                      });
+                    },
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(color: Colors.blue),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          )
-        ],
+            
+          ],
+        ),
       ),
     );
   }
