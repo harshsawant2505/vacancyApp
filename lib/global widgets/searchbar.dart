@@ -39,11 +39,10 @@ class _MainSearchBarState extends State<MainSearchBar> {
 
         parkingSpots.clear();
         parkingSpots.addAll(castedList);
-        print(parkingSpots);
         widget.func();
       }
     } catch (e) {
-      print(e.toString());
+     logger.e(e.toString());
     }
   }
 

@@ -49,6 +49,7 @@ class _FirstScreenState extends State<FirstScreen> {
   void getgetsession() async {
     final s = await getSession();
     token = json.decode(s ?? '{"data":"none"}');
+    // token = {"data":"user"};
   }
 
   List<List<String>> gpsList = [];
@@ -69,18 +70,16 @@ class _FirstScreenState extends State<FirstScreen> {
               gpsString.split(' '); // Split the string by comma
           return splitGps
               .map((val) => (val))
-              .toList(); // Convert to double and return
+              .toList();
         }).toList();
 
-        // Print the list of gps coordinates
-        print(
-            gpsList); // Output: [[15.2993, 74.124], [15.4966, 74.0505], [15.3916, 73.818]]
+        //final List
+        logger.d(gpsList);
 
-        // print("this is sorted:  $parkingSpots");
         setState(() {});
       }
     } catch (e) {
-      print(e.toString());
+      logger.e("ERROR: ${e.toString()}");
     }
   }
 
@@ -95,23 +94,19 @@ class _FirstScreenState extends State<FirstScreen> {
     double currentLon = position.longitude;
 
     for (var value in gpsList) {
-      print(value);
       if (value[0].isEmpty) {
-        print('skipped');
+        logger.d("Skipped one value");
       } else {
-        print('lol');
         double distance = CustomDistanceCalculator().calculateDistance(
             currentLat,
             currentLon,
             double.tryParse(value[0]) ?? 0,
             double.tryParse(value[1]) ?? 0);
-        print(distance);
+        logger.d(distance);
         sortedCoordinates.add([value[0], value[1], distance]);
       }
     }
 
-    // Sort by distance (the third element in the sublist)
-    print('so it worked? $sortedCoordinates');
     sortedCoordinates.sort((a, b) => a[2].compareTo(b[2]));
 
     // Keep only the lat/lon coordinates for output
@@ -119,7 +114,7 @@ class _FirstScreenState extends State<FirstScreen> {
         .map((coords) => [coords[0], coords[1], coords[2]])
         .toList();
     parkingSpots.clear();
-    print(sortedCoordinates);
+    logger.d("Sorted: ${sortedCoordinates.toString()}");
 
     for (int i = 0; i < 10 && i < sortedCoordinates.length; i++) {
       final lat = sortedCoordinates[i][0];
@@ -138,15 +133,15 @@ class _FirstScreenState extends State<FirstScreen> {
         if (res.statusCode == 200) {
           final Map something = json.decode(res.body);
           parkingSpots.add(something);
-          print(parkingSpots);
+          logger.d(parkingSpots.toString());
         }
       } catch (e) {
-        print(e.toString());
+        logger.e("ERROR: ${e.toString()}");
       }
     }
     setState(() {
       parkingSpots = parkingSpots;
-    }); // Update the UI
+    });
   }
 
   @override
