@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
         'phNo': phNo
       };
         final res = await http.post(
-        Uri.parse("https://node-api-rho-seven.vercel.app/register"),
+        Uri.parse("https://node-api-5kc9.onrender.com/register"),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -102,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
         'halfhr': halfhrpay
       };
         final res = await http.post(
-        Uri.parse("https://node-api-rho-seven.vercel.app/registerParking"),
+        Uri.parse("https://node-api-5kc9.onrender.com/registerParking"),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -138,7 +138,7 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
         'policeEmail': policeEmailText
       };
         final res = await http.post(
-        Uri.parse("https://node-api-rho-seven.vercel.app/registerPolice"),
+        Uri.parse("https://node-api-5kc9.onrender.com/registerPolice"),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -174,7 +174,7 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
      
       };
         final res = await http.post(
-        Uri.parse("https://node-api-rho-seven.vercel.app/login"),
+        Uri.parse("https://node-api-5kc9.onrender.com/login"),
         headers: {
           'Content-Type': 'application/json',
         },
