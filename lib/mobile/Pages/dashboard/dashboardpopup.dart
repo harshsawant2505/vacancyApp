@@ -78,8 +78,7 @@ class AccountPopUp extends StatelessWidget {
                 child: const MenuButton(icon: Icons.feedback, text: "Complain"),
               ),
               Visibility(
-                visible: true,
-                //TODO: to be replaced with the initState condition when connected to backend
+                visible: token['data'] == 'police',
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(context,

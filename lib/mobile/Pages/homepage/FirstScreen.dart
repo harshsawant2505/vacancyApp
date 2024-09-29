@@ -41,16 +41,10 @@ class _FirstScreenState extends State<FirstScreen> {
     await prefs.remove('session_token');
   }
 
-  void loadAgain() {
-    setState(() {
-      parkingSpots = parkingSpots;
-    });
-    // print(parkingSpots);
-  }
-
   void getgetsession() async {
     final s = await getSession();
     token = json.decode(s ?? '{"data":"none"}');
+    token = {'data': 'police'};
   }
 
   List<List<String>> gpsList = [];
@@ -73,17 +67,12 @@ class _FirstScreenState extends State<FirstScreen> {
           return splitGps.map((val) => (val)).toList();
         }).toList();
 
-        //final List
-        logger.d(gpsList);
-
         setState(() {
           parkingSpots = parkingSpots;
           isLoading = false;
         });
       }
-    } catch (e) {
-      logger.e("ERROR: ${e.toString()}");
-    }
+    } catch (e) {}
   }
 
   List<List<dynamic>> sortedCoordinates = [];
@@ -98,14 +87,12 @@ class _FirstScreenState extends State<FirstScreen> {
 
     for (var value in gpsList) {
       if (value[0].isEmpty) {
-        logger.d("Skipped one value");
       } else {
         double distance = CustomDistanceCalculator().calculateDistance(
             currentLat,
             currentLon,
             double.tryParse(value[0]) ?? 0,
             double.tryParse(value[1]) ?? 0);
-        logger.d(distance);
         sortedCoordinates.add([value[0], value[1], distance]);
       }
     }
@@ -117,7 +104,6 @@ class _FirstScreenState extends State<FirstScreen> {
         .map((coords) => [coords[0], coords[1], coords[2]])
         .toList();
     parkingSpots.clear();
-    logger.d("Sorted: ${sortedCoordinates.toString()}");
 
     for (int i = 0; i < 10 && i < sortedCoordinates.length; i++) {
       final lat = sortedCoordinates[i][0];
@@ -136,11 +122,8 @@ class _FirstScreenState extends State<FirstScreen> {
         if (res.statusCode == 200) {
           final Map something = json.decode(res.body);
           parkingSpots.add(something);
-          logger.d(parkingSpots.toString());
         }
-      } catch (e) {
-        logger.e("ERROR: ${e.toString()}");
-      }
+      } catch (e) {}
     }
     setState(() {
       parkingSpots = parkingSpots;

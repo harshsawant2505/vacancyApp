@@ -1,6 +1,5 @@
 import 'package:bits_hackathon/globalvariables.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
