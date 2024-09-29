@@ -25,7 +25,7 @@ class AccountPopUp extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              token['type'] == "none"
+              token['type'] == 'none'
                   ? Row(
                       children: [
                         const Text("Not logged in "),
@@ -44,12 +44,12 @@ class AccountPopUp extends StatelessWidget {
                         )
                       ],
                     )
-                  :  Column(
+                  : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                           token['name'],
+                          token['name'],
                           style: TextStyle(fontSize: 20),
                         ),
                         Text(
