@@ -1,4 +1,4 @@
-import "dotenv"
+import {} from 'dotenv/config'
 import express from 'express';
 import session from "express-session";
 import cors from "cors";
@@ -9,17 +9,17 @@ import {getAbout, getLocationDetails, getUserData, register, login, setDataSet, 
 app.use(cors());
 app.use(express.json());
 
-const sessionKey =  !process.env.SESSIONKEY;
+const sessionKey =  process.env.SESSIONKEY;
 console.log(sessionKey);
 
 app.use(session({
-  secret: "sfsdfksdkfjsdjf", // Change this to a random string
+  secret: sessionKey, // Change this to a random string
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // Set to true if using HTTPS
 }));
 
-app.post('getCorrespondingData', getCorrespondingData);
+app.post('/getCorrespondingData', getCorrespondingData);
 
 app.get('/setdataset', setDataSet);
 
