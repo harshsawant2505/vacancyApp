@@ -59,32 +59,36 @@ class _AdminDashboardState extends State<AdminDashboard> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            DropdownMenu(
-              initialSelection: "Panaji",
-              dropdownMenuEntries: const [
-                DropdownMenuEntry(value: 'panaji', label: "Panaji"),
-                DropdownMenuEntry(value: 'vasco', label: "Vasco"),
-                DropdownMenuEntry(value: 'bicholim', label: "Bicholim"),
-                DropdownMenuEntry(value: 'calangute', label: "Calangute"),
-                DropdownMenuEntry(value: 'mopa', label: "Mopa"),
-                DropdownMenuEntry(value: 'Anjuna', label: "Anjuna"),
-                DropdownMenuEntry(value: 'mapusa', label: "Mapusa"),
-                DropdownMenuEntry(value: 'quepem', label: "Quepem"),
-                DropdownMenuEntry(value: 'canacona', label: "Canacona"),
-                DropdownMenuEntry(value: 'colva', label: "Colva"),
-                DropdownMenuEntry(value: 'curchorem', label: "Curchorem"),
-              ],
-              onSelected: (value) {
-                getData(value ?? "panaji");
-              },
-              hintText: "Location",
-              width: MediaQuery.of(context).size.width - 20,
-              controller: controller,
-            ),
-            Graph(),
-          ],
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height - 20,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DropdownMenu(
+                initialSelection: "Panaji",
+                dropdownMenuEntries: const [
+                  DropdownMenuEntry(value: 'panaji', label: "Panaji"),
+                  DropdownMenuEntry(value: 'vasco', label: "Vasco"),
+                  DropdownMenuEntry(value: 'bicholim', label: "Bicholim"),
+                  DropdownMenuEntry(value: 'calangute', label: "Calangute"),
+                  DropdownMenuEntry(value: 'mopa', label: "Mopa"),
+                  DropdownMenuEntry(value: 'Anjuna', label: "Anjuna"),
+                  DropdownMenuEntry(value: 'mapusa', label: "Mapusa"),
+                  DropdownMenuEntry(value: 'quepem', label: "Quepem"),
+                  DropdownMenuEntry(value: 'canacona', label: "Canacona"),
+                  DropdownMenuEntry(value: 'colva', label: "Colva"),
+                  DropdownMenuEntry(value: 'curchorem', label: "Curchorem"),
+                ],
+                onSelected: (value) {
+                  getData(value ?? "panaji");
+                },
+                hintText: "Location",
+                width: MediaQuery.of(context).size.width - 20,
+                controller: controller,
+              ),
+              Graph(),
+            ],
+          ),
         ),
       ),
     );
@@ -107,42 +111,74 @@ class _GraphState extends State<Graph> {
         elevation: 5,
         borderRadius: BorderRadius.circular(8),
         child: Container(
-          height: MediaQuery.of(context).size.width / 1.5,
           width: MediaQuery.of(context).size.width - 16,
+          height: MediaQuery.of(context).size.height -
+              MediaQuery.of(context).size.width -
+              25,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
           child: ListView.builder(
+              shrinkWrap: true,
               itemCount: gpsList.length,
-              scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                return SizedBox(
-                  width: 30,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 2.5),
-                        height:
-                            gpsList[index]['4w'] * 100 / gpsList[index]['4w'],
-                        width: 20,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(8),
-                          ),
-                          color: Colors.lightBlue[300],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                        child: Text(
-                          gpsList[index]['place'],
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 8),
-                        ),
-                      )
-                    ],
-                  ),
+                double percent = gpsList[index]['4w'] -
+                    gpsList[index]['4w_occ'] / gpsList[index]['4w'];
+                percent = 0.5;
+                return GraphBar(
+                  entry: gpsList[index],
+                  percent: percent,
                 );
               }),
         ),
+      ),
+    );
+  }
+}
+
+class GraphBar extends StatefulWidget {
+  final Map entry;
+  final double percent;
+  const GraphBar({super.key, required this.entry, required this.percent});
+
+  @override
+  State<GraphBar> createState() => _GraphBarState();
+}
+
+class _GraphBarState extends State<GraphBar> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 2.0),
+            child: Text(
+              widget.entry['place'],
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 14),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
+            margin: const EdgeInsets.symmetric(horizontal: 2.5),
+            // width: MediaQuery.of(context).size.width - 30,
+            decoration: BoxDecoration(
+                color: Colors.grey, borderRadius: BorderRadius.circular(6)),
+            child: Container(
+              width: (widget.percent * MediaQuery.of(context).size.width) - 30,
+              height: 20,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                color: widget.percent >= 0.50
+                    ? Colors.green
+                    : widget.percent >= 0.25
+                        ? Colors.orange
+                        : Colors.red,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
