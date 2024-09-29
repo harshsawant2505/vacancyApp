@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:bits_hackathon/globalvariables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:latlong2/latlong.dart';
 
@@ -109,7 +110,14 @@ class _MapScreenState extends State<MapScreen> {
         ),
       );
       userLocationSet = true;
-      mapController.move(userLocation, 16.5); // Move to the user's location
+      mapController.move(userLocation, 16.5);
+      Fluttertoast.showToast(
+          webPosition: "bottom center",
+          msg: "Location might not be 100% accurate.",
+          timeInSecForIosWeb: 10,
+          backgroundColor: Colors.red,
+          webBgColor: "red",
+          textColor: Colors.black87);
     });
   }
 
