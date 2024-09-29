@@ -1,38 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 
 List<Map> parkingSpots = [];
+Map<String, dynamic> token = {};
+final MapController mapController = MapController();
 
 Logger logger = Logger();
 
-double latitude = 0, longitude = 0;
-final mapController = MapController.withPosition(
-  initPosition: GeoPoint(
-    latitude: 15.5010, // Placeholder coordinates
-    longitude: 73.8294, // Placeholder coordinates
-  ),
-);
+class CustomDistanceCalculator {
+  final Distance distance = const Distance();
 
-Future<double> getDistance(GeoPoint place) async {
-  double dis = 0;
-  GeoPoint g = GeoPoint(latitude: 15, longitude: 73);
+  // Function to calculate and format the distance between two coordinates
+  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    LatLng point1 = LatLng(lat1, lon1);
+    LatLng point2 = LatLng(lat2, lon2);
 
-  try {
-    print("entered");
-    RoadInfo road = await mapController.drawRoad(
-      g,
-      place,
-      roadType: RoadType.car,
-      roadOption: RoadOption(
-        roadColor: Colors.white.withOpacity(0),
-      ),
-    );
-    logger.d('yoooo ${road.distance}');
-    dis = road.distance ?? 0;
-  } catch (e) {
-    logger.d('error ${e.toString()}');
+    // Calculate the distance in kilometers
+    double calculatedDistanceKm = distance.as(LengthUnit.Meter, point1, point2);
+
+    // Format the distance to 3 decimal places and append " km"
+    return calculatedDistanceKm * 1.91 / 1000;
   }
-
-  return dis;
 }

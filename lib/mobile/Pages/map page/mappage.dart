@@ -1,106 +1,13 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
-// import 'package:logger/logger.dart';
-
-// class MapPage extends StatefulWidget {
-//   const MapPage({super.key});
-
-//   @override
-//   State<MapPage> createState() => _MapPageState();
-// }
-
-// class _MapPageState extends State<MapPage> {
-//   final mapController = MapController.withPosition(
-//     initPosition: GeoPoint(
-//       latitude: 15.5010, // Placeholder coordinates
-//       longitude: 73.8294, // Placeholder coordinates
-//     ),
-//   );
-
-//   Logger logger = Logger();
-
-//   @override
-//   void dispose() {
-//     // Dispose the controller when the widget is disposed
-//     mapController.dispose();
-//     super.dispose();
-//   }
-
-//   // Function to enable user tracking (without adding a duplicate marker)
-//   Future<void> _enableUserTracking() async {
-//     try {
-//       // Enable user tracking
-//       await mapController.enableTracking();
-//     } catch (e) {
-//       logger.e("ERROR enabling user tracking: $e");
-//       Fluttertoast.showToast(
-//           msg: "Something went wrong while enabling user tracking!",
-//           toastLength: Toast.LENGTH_LONG);
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder(
-//       future: Future.delayed(const Duration(milliseconds: 500)),
-//       builder: (context, snapshot) {
-//         if (snapshot.connectionState == ConnectionState.done) {
-//           // Once delay is done, render the map
-//           return SizedBox(
-//             child: OSMFlutter(
-//               controller: mapController,
-//               onMapIsReady: (isReady) async {
-//                 if (isReady) {
-//                   logger.d("MAP READY");
-//                   await _enableUserTracking(); // Enable user tracking
-//                 } else {
-//                   logger.d("MAP not ready");
-//                 }
-//               },
-//               osmOption: OSMOption(
-//                 zoomOption: const ZoomOption(
-//                   initZoom: 12, // Zoom level to properly view the markers
-//                   minZoomLevel: 3,
-//                   maxZoomLevel: 19,
-//                   stepZoom: 1.0,
-//                 ),
-//                 userLocationMarker: UserLocationMaker(
-//                   personMarker: const MarkerIcon(
-//                     icon: Icon(
-//                       Icons.location_history_rounded,
-//                       color: Colors.red,
-//                       size: 48,
-//                     ),
-//                   ),
-//                   directionArrowMarker: const MarkerIcon(
-//                     icon: Icon(
-//                       Icons.double_arrow,
-//                       size: 48,
-//                     ),
-//                   ),
-//                 ),
-//                 roadConfiguration: const RoadOption(
-//                   roadColor: Colors.yellowAccent,
-//                 ),
-//               ),
-//             ),
-//           );
-//         }
-//         // Display a loading indicator while waiting for the Future
-//         return const Center(child: CircularProgressIndicator());
-//       },
-//     );
-//   }
-// }
-
 import 'dart:async';
 import 'dart:ui';
+import 'package:bits_hackathon/globalvariables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+
 import 'package:latlong2/latlong.dart';
-import 'package:open_route_service/open_route_service.dart';
-import 'package:geolocator/geolocator.dart'; // Import geolocator
+
+import 'package:geolocator/geolocator.dart';
+import 'package:open_route_service/open_route_service.dart'; // Import geolocator
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -121,14 +28,14 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
   }
 
-  final defaultPoint = const LatLng(-8.923303951223144, 13.182696707942991);
+  final defaultPoint = const LatLng(15.41, 73.49);
 
   List listOfPoints = [];
   List<LatLng> points = [];
   List<Marker> markers = [];
 
   // Create a Distance object to calculate the distance between points
-  final Distance distance = Distance();
+  final Distance distance = const Distance();
 
   Future<void> getCoordinates(LatLng lat1, LatLng lat2) async {
     setState(() {
@@ -156,72 +63,6 @@ class _MapScreenState extends State<MapScreen> {
       isLoading = false;
     });
   }
-
-  final MapController mapController = MapController();
-
-  // Function to handle the second tap
-  void _handleTap(LatLng latLng) {
-    if (userLocationSet) {
-      setState(() {
-        if (markers.length < 2) {
-          markers.add(
-            Marker(
-              point: latLng,
-              width: 80,
-              height: 80,
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.location_on),
-                color: Colors.red,
-                iconSize: 45,
-              ),
-            ),
-          );
-        }
-
-        if (markers.length == 2) {
-          // Add a slight delay before showing the process effect
-          Future.delayed(const Duration(milliseconds: 500), () {
-            setState(() {
-              isLoading = true;
-            });
-          });
-
-          getCoordinates(markers[0].point, markers[1].point);
-
-          // Calculate the distance between the two points in kilometers
-          final double calculatedDistanceKm = distance.as(
-            LengthUnit.Kilometer,
-            markers[0].point,
-            markers[1].point,
-          );
-
-          if (calculatedDistanceKm < 1) {
-            // If the distance is less than 1 kilometer, show it in meters
-            final double calculatedDistanceMeters = distance.as(
-              LengthUnit.Meter,
-              markers[0].point,
-              markers[1].point,
-            );
-            print(
-                "Distance: ${calculatedDistanceMeters.toStringAsFixed(2)} meters");
-          } else {
-            // Otherwise, show the distance in kilometers
-            print("Distance: ${calculatedDistanceKm.toStringAsFixed(2)} km");
-          }
-
-          // Calculate the bounds that contain the two marked points
-          LatLngBounds bounds = LatLngBounds.fromPoints(
-              markers.map((marker) => marker.point).toList());
-          // Perform a zoom out so that the bounds fit the screen
-          mapController.fitBounds(bounds);
-        }
-      });
-    } else {
-      print("User location is not set yet.");
-    }
-  }
-
   // Function to get the user's current location
   Future<void> _determinePosition() async {
     bool serviceEnabled;
@@ -281,7 +122,7 @@ class _MapScreenState extends State<MapScreen> {
             options: MapOptions(
               initialZoom: 16,
               initialCenter: myPoint,
-              onTap: (tapPosition, latLng) => _handleTap(latLng),
+              // onTap: (tapPosition, latLng) => _handleTap(latLng),
             ),
             children: [
               TileLayer(
@@ -291,6 +132,7 @@ class _MapScreenState extends State<MapScreen> {
               MarkerLayer(
                 markers: markers,
               ),
+              
               PolylineLayer(
                 polylineCulling: false,
                 polylines: [
@@ -317,41 +159,8 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
           ),
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 20.0,
-            left: MediaQuery.of(context).size.width / 2 - 110,
-            child: Align(
-              child: TextButton(
-                onPressed: () {
-                  if (markers.length <= 1) {
-                    // If only the user location marker is set
-                    print('Mark a second point on the map');
-                  } else {
-                    setState(() {
-                      markers = [markers[0]]; // Reset, keeping only user location
-                      points = [];
-                    });
-                  }
-                },
-                child: Container(
-                  width: 200,
-                  height: 50,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                    child: Text(
-                      markers.length <= 1 ? "Mark second point" : "Clear route",
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
-      
     );
   }
 }
