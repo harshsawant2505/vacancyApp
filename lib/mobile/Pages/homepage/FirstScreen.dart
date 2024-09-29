@@ -18,6 +18,7 @@ class FirstScreen extends StatefulWidget {
 class _FirstScreenState extends State<FirstScreen> {
   final TextEditingController controller = TextEditingController();
   double currentLat = 0, currentLon = 0;
+  bool isLoading = true;
   Future<void> checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -50,7 +51,6 @@ class _FirstScreenState extends State<FirstScreen> {
   void getgetsession() async {
     final s = await getSession();
     token = json.decode(s ?? '{"data":"none"}');
-    token = {"data": "police"};
   }
 
   List<List<String>> gpsList = [];
@@ -59,6 +59,7 @@ class _FirstScreenState extends State<FirstScreen> {
     const url = "https://node-api-5kc9.onrender.com/allparkingdetails";
 
     try {
+      isLoading = true;
       final res = await h.get(Uri.parse(url));
       // print(res.body);
 
@@ -75,7 +76,10 @@ class _FirstScreenState extends State<FirstScreen> {
         //final List
         logger.d(gpsList);
 
-        setState(() {});
+        setState(() {
+          parkingSpots = parkingSpots;
+          isLoading = false;
+        });
       }
     } catch (e) {
       logger.e("ERROR: ${e.toString()}");
@@ -169,7 +173,7 @@ class _FirstScreenState extends State<FirstScreen> {
             ),
             MainSearchBar(
               controller: controller,
-              func: loadAgain,
+              func: getAllData,
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -183,8 +187,10 @@ class _FirstScreenState extends State<FirstScreen> {
                         topLeft: Radius.circular(25),
                         topRight: Radius.circular(25))),
                 child: parkingSpots.isEmpty
-                    ? const Center(
-                        child: Text("No result found"),
+                    ? Center(
+                        child: isLoading
+                            ? const CircularProgressIndicator()
+                            : const Text("No result found"),
                       )
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
