@@ -31,7 +31,7 @@ class AccountPopUp extends StatelessWidget {
                         GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
-                            Navigator.push(context,
+                            Navigator.pushReplacement(context,
                                 MaterialPageRoute(builder: (context) {
                               return const LoginPage();
                             }));

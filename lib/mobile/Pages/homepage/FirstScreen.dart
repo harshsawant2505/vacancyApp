@@ -152,6 +152,7 @@ class _FirstScreenState extends State<FirstScreen> {
 
   @override
   void initState() {
+    print("Init hit");
     getgetsession();
     checkLocationPermission();
     getAllData();

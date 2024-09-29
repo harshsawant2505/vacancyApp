@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
         setSession(apiRes);
         getgetsession();
   //set alert here
-      Navigator.of(context).pop();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return const FirstScreen();}));
       }
 
       }catch(err){
@@ -133,6 +133,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return const FirstScreen();}));}, icon: const Icon(Icons.arrow_back)),
         title: Text(isRegister ? "Register" : "Login"),
         centerTitle: true,
       ),
