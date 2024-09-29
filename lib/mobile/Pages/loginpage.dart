@@ -21,10 +21,12 @@ class _LoginPageState extends State<LoginPage> {
   final numberplate = TextEditingController();
   final password = TextEditingController();
   final name = TextEditingController();
-  final onehr = TextEditingController();
+  final upiid = TextEditingController();
+  final amount = TextEditingController();
   final halfhr = TextEditingController();
   final policeEmail = TextEditingController();
   final phNo = TextEditingController();
+  final gps = TextEditingController();
   bool isRegister = true;
 
   bool isParking = false;
@@ -91,15 +93,17 @@ class _LoginPageState extends State<LoginPage> {
       }
   }
 
-  void registerParking(String nameText,String emailText, String passwordText, String phNo, String onehrpay, String halfhrpay)async{
+  void registerParking(String nameText,String emailText, String passwordText, String phNo, String upiidText, String amountText, String gps)async{
      try{
+        String upiurl = "upi://pay?pa=${upiidText}&pn=${nameText}&am=${amountText}&cu=INR";
+        print(upiurl);
       final Map<String, dynamic> jsonData = {
         'name': nameText,
         'email': emailText,
         'password': passwordText,
         'phNo': phNo,
-        'onehr': onehrpay,
-        'halfhr': halfhrpay
+        'upiurl': upiurl,
+        'gps':gps
       };
         final res = await http.post(
         Uri.parse("https://node-api-5kc9.onrender.com/registerParking"),
@@ -289,10 +293,11 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
               visible: isRegister,
               child: CustomTextField(
                 controller: phNo,
-                hint: "Number Plate (optional)",
+                hint: "phoneNumber",
                 icon: Icons.car_crash_rounded,
               ),
             ),
+            
              Visibility(
               visible: isPolice,
               child: CustomTextField(
@@ -304,17 +309,25 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
              Visibility(
               visible: isParking,
               child: CustomTextField(
-                controller: onehr,
-                hint: "Payment Link for 20rs (1hr)",
+                controller: upiid,
+                hint: "Valid Upi Id",
                 icon: Icons.monetization_on_outlined,
               ),
             ),
              Visibility(
               visible: isParking,
               child: CustomTextField(
-                controller: halfhr,
-                hint: "Payment Link for 10rs (30min)",
+                controller: amount,
+                hint: "Amount for 1hr Parking",
                icon: Icons.monetization_on_outlined,
+              ),
+            ),
+             Visibility(
+              visible: isParking,
+              child: CustomTextField(
+                controller: gps,
+                hint: "gps lat lon of entry point",
+               icon: Icons.pin_drop,
               ),
             ),
             GestureDetector(
@@ -324,7 +337,7 @@ void registerPolice(String nameText, String emailText, String passwordText, Stri
 
                   register(name.text,email.text, password.text,phNo.text);
                   }else if(isParking){
-                     registerParking(name.text,email.text, password.text,phNo.text, onehr.text, halfhr.text);
+                     registerParking(name.text,email.text, password.text,phNo.text, upiid.text, amount.text,gps.text);
                   }else if(isPolice){
                     registerPolice(name.text, email.text, password.text,phNo.text, policeEmail.text);
                   }
