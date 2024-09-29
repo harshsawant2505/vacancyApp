@@ -5,6 +5,7 @@ import 'package:bits_hackathon/globalvariables.dart';
 import 'package:bits_hackathon/mobile/Pages/map%20page/mappage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as h;
 
 class FirstScreen extends StatefulWidget {
@@ -16,12 +17,26 @@ class FirstScreen extends StatefulWidget {
 
 class _FirstScreenState extends State<FirstScreen> {
   final TextEditingController controller = TextEditingController();
-
   Future<void> checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
+  }
+
+  Future<void> setSession(Map<String, dynamic> token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('session_token', jsonEncode(token));
+  }
+
+  Future<String?> getSession() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('session_token');
+  }
+
+  Future<void> clearSession() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('session_token');
   }
 
   void loadAgain() {
@@ -31,10 +46,15 @@ class _FirstScreenState extends State<FirstScreen> {
     // print(parkingSpots);
   }
 
+  void getgetsession() async {
+    final s = await getSession();
+    token = json.decode(s ?? '{"data":"none"}');
+  }
+
   List<List<String>> gpsList = [];
 
   Future<void> getAllData() async {
-    const url = "http://localhost:3001/allparkingdetails";
+    const url = "https://node-api-5kc9.onrender.com/allparkingdetails";
 
     try {
       final res = await h.get(Uri.parse(url));
@@ -42,10 +62,6 @@ class _FirstScreenState extends State<FirstScreen> {
 
       if (res.statusCode == 200) {
         List<dynamic> data = json.decode(res.body);
-
-        // Assuming each parking spot has 'latitude' and 'longitude' keys
-        Position userLocation = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
 
         gpsList = data.map((spot) {
           String gpsString = spot['gps']; // Get the GPS string
@@ -73,8 +89,8 @@ class _FirstScreenState extends State<FirstScreen> {
   Future<void> _getCurrentLocationAndSortCoordinates() async {
     // Get the current location
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    print("is it here ${gpsList.length}");
+        locationSettings:
+            const LocationSettings(accuracy: LocationAccuracy.high));
     double currentLat = position.latitude;
     double currentLon = position.longitude;
 
@@ -84,7 +100,7 @@ class _FirstScreenState extends State<FirstScreen> {
         print('skipped');
       } else {
         print('lol');
-        double distance = DistanceCalculator().calculateDistance(
+        double distance = CustomDistanceCalculator().calculateDistance(
             currentLat,
             currentLon,
             double.tryParse(value[0]) ?? 0,
@@ -102,7 +118,7 @@ class _FirstScreenState extends State<FirstScreen> {
     sortedCoordinates = sortedCoordinates
         .map((coords) => [coords[0], coords[1], coords[2]])
         .toList();
-    print("The man: ");
+    parkingSpots.clear();
     print(sortedCoordinates);
 
     for (int i = 0; i < 10 && i < sortedCoordinates.length; i++) {
@@ -110,7 +126,7 @@ class _FirstScreenState extends State<FirstScreen> {
       final lon = sortedCoordinates[i][1];
 
       try {
-        const url = "http://localhost:3001/getCorrespondingData";
+        const url = "https://node-api-5kc9.onrender.com/getCorrespondingData";
         final res = await h.post(
           Uri.parse(url),
           headers: {
@@ -128,12 +144,15 @@ class _FirstScreenState extends State<FirstScreen> {
         print(e.toString());
       }
     }
-    setState(() {}); // Update the UI
+    setState(() {
+      parkingSpots = parkingSpots;
+    }); // Update the UI
   }
 
   @override
   void initState() {
     super.initState();
+    getgetsession();
     checkLocationPermission();
     getAllData();
     _getCurrentLocationAndSortCoordinates();
@@ -143,41 +162,47 @@ class _FirstScreenState extends State<FirstScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
+        body: Stack(
+          alignment: Alignment.topCenter,
           children: [
-            MainSearchBar(
-              controller: controller,
-              func: loadAgain,
-            ),
             Container(
-              height: MediaQuery.of(context).size.height / 2 - 50,
+              height: MediaQuery.of(context).size.height / 2,
               width: MediaQuery.of(context).size.width,
               color: Colors.grey,
               child: const Center(
                 child: MapScreen(),
               ),
             ),
-            Container(
-              height: MediaQuery.of(context).size.height / 2 - 30,
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.only(top: 20),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
+            MainSearchBar(
+              controller: controller,
+              func: loadAgain,
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: MediaQuery.of(context).size.height / 1.9,
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25))),
+                child: parkingSpots.isEmpty
+                    ? const Center(
+                        child: Text("No result found"),
+                      )
+                    : ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount:
+                            controller.text.isEmpty ? 10 : parkingSpots.length,
+                        itemBuilder: (context, index) {
+                          return ParkingCard(
+                            entry: parkingSpots[index],
+                          );
+                        },
+                      ),
               ),
-              child: parkingSpots.isEmpty
-                  ? const Center(
-                      child: Text("No result found"),
-                    )
-                  : ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount:
-                          controller.text.isEmpty ? 10 : parkingSpots.length,
-                      itemBuilder: (context, index) {
-                        return ParkingCard(
-                          entry: parkingSpots[index],
-                        );
-                      },
-                    ),
             )
           ],
         ),
