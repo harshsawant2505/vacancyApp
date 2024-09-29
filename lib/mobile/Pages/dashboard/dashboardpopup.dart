@@ -1,4 +1,5 @@
 import 'package:bits_hackathon/globalvariables.dart';
+import 'package:bits_hackathon/mobile/Pages/complaints%20pages/complaints.dart';
 import 'package:bits_hackathon/mobile/Pages/dashboard/adminDashboard.dart';
 import 'package:bits_hackathon/mobile/Pages/dashboard/userdashboard.dart';
 import 'package:bits_hackathon/mobile/Pages/loginpage.dart';
@@ -24,7 +25,7 @@ class AccountPopUp extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              token['data'] == "none"
+              token['type'] == "none"
                   ? Row(
                       children: [
                         const Text("Not logged in "),
@@ -58,7 +59,7 @@ class AccountPopUp extends StatelessWidget {
                       ],
                     ),
               Visibility(
-                visible: token['data'] != 'none',
+                visible: token['type'] != 'none',
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
@@ -74,11 +75,14 @@ class AccountPopUp extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const ComplaintsPage();
+                  }));
                 },
                 child: const MenuButton(icon: Icons.feedback, text: "Complain"),
               ),
               Visibility(
-                visible: token['data'] == 'police',
+                visible: token['type'] == 'police',
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(context,

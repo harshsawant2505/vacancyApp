@@ -81,7 +81,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 onSelected: (value) {
                   setState(() {
                     String lol = value!;
-                    print('yooo $lol');
                     getData(lol);
                   });
                 },
