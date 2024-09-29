@@ -44,7 +44,7 @@ class _FirstScreenState extends State<FirstScreen> {
   void getgetsession() async {
     final s = await getSession();
     token = json.decode(s ?? '{"data":"none"}');
-    token = {'data': 'police'};
+    token = {'type': 'police'};
   }
 
   List<List<String>> gpsList = [];
