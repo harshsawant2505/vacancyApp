@@ -65,7 +65,7 @@ class _FirstScreenState extends State<FirstScreen> {
         List<dynamic> data = json.decode(res.body);
 
         gpsList = data.map((spot) {
-          String gpsString = spot['gps']; 
+          String gpsString = spot['gps'];
           List<String> splitGps =
               gpsString.split(' '); // Split the string by comma
           return splitGps.map((val) => (val)).toList();
@@ -190,11 +190,6 @@ class _FirstScreenState extends State<FirstScreen> {
                         itemCount:
                             controller.text.isEmpty ? 10 : parkingSpots.length,
                         itemBuilder: (context, index) {
-                          if (index > 0 &&
-                              parkingSpots[index]['place'] ==
-                                  parkingSpots[index - 1]['place']) {
-                            return Container();
-                          }
                           return ParkingCard(
                             entry: parkingSpots[index],
                           );
